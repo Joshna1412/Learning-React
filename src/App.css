@@ -174,3 +174,24 @@
   width: 90%;
   height: 70%;
 }
+
+.label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 3px;
+  color: #cbd5e1;
+  font-size: 16px;
+}
+
+.check-box {
+  background-color: white;
+  accent-color: blue;
+  padding: 2px;
+}
+
+.show-password-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+}

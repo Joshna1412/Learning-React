@@ -12,7 +12,8 @@ class App extends Component {
     website: '',
     username: '',
     password: '',
-    searchInput: ''
+    searchInput: '',
+    isChecked: false
   }
   handleWebsiteInput = event => {
     this.setState({ website: event.target.value })
@@ -58,8 +59,12 @@ class App extends Component {
     )
     return updatedList
   }
+  handleChecked = () => {
+    const { isChecked } = this.state
+    this.setState({ isChecked: !isChecked })
+  }
   render() {
-    const { website, username, password, searchInput } = this.state
+    const { website, username, password, searchInput, isChecked } = this.state
     const filteredPasswordList = this.searchInputResults()
     return (
       <div className='container'>
@@ -116,10 +121,14 @@ class App extends Component {
             </div>
           </div>
           <div style={{ borderTop: "1px solid #ccc", margin: "20px 0" }}></div>
+          <div className='show-password-container'>
+            <input value={isChecked} className='check-box' type="checkbox" id="show-passwords" onChange={this.handleChecked}></input>
+            <label htmlFor="show-passwords" className='label' >Show Passwords</label>
+          </div>
           {filteredPasswordList.length > 0 ? (<ul className='passwords-list-container'>
             {
               filteredPasswordList.map(each =>
-                <PasswordItem key={each.id} passwordDetails={each} onDelete={this.deletePassword} />
+                <PasswordItem key={each.id} passwordDetails={each} onDelete={this.deletePassword} isClicked={isChecked} />
               )
             }
           </ul>) :
