@@ -1,0 +1,43 @@
+.team-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 1258px;
+    margin-left: 5px;
+}
+
+.team-banner {
+    align-self: center;
+    margin: auto;
+}
+
+.last-matches-container {
+    background-color: #1e293b;
+    color: white;
+    width: 80%;
+    align-self: center;
+    border-radius: 10px;
+}
+
+.last-matches-heading {
+    color: white;
+    font-weight: bold;
+    align-self: flex-start;
+    margin-left: 150px;
+    font-size: 26px;
+    padding: 15px;
+}
+
+.competing-team-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: white;
+    padding: 10px;
+}
+
+.competing-team-logo {
+    width: 100px;
+    height: 100px;
+}

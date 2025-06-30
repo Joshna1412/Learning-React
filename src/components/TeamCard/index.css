@@ -1,0 +1,21 @@
+.image {
+    width: 100px;
+    height: 100px;
+}
+
+.title {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.card-container {
+    background-color: #ffffff33;
+    border-color: #ffffff33;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
