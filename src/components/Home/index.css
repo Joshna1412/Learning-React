@@ -34,3 +34,24 @@
     list-style-type: none;
 
 }
+
+@media screen and (max-width: 1024px) {
+    .home-container {
+        width: 100%;
+        background-image: url("https://assets.ccbp.in/frontend/react-js/ipl-dashboard-sm-bg.png");
+    }
+
+    .teams-cards-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 12px;
+    }
+
+    .heading {
+        font-size: 24px;
+    }
+
+    .ipl-logo {
+        width: 24px;
+        height: 24px;
+    }
+}

@@ -1,59 +1,76 @@
-import { Component, useEffect, useState } from 'react'
-import Loader from '../Loader'
-import './index.css'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Loader from '../Loader'
+import MatchCard from '../MatchCard'
+import './index.css'
+
 const TeamList = () => {
     const [isLoading, setIsLoading] = useState(true)
-    const [teamData, setTeamData] = useState({})
+    const [teamBannerUrl, setTeamBannerUrl] = useState('')
+    const [latestMatch, setLatestMatch] = useState({})
+    const [recentMatches, setRecentMatches] = useState([])
+
     const { id } = useParams()
 
     useEffect(() => {
-        console.log(id, 'match')
-        getTeamItemData()
+        getTeamData()
     }, [])
 
-    const getTeamItemData = async () => {
-
+    const getTeamData = async () => {
         const response = await fetch(`https://apis.ccbp.in/ipl/${id}`)
         const data = await response.json()
 
-        const updatedData = {
-            teamBannerUrl: data.team_banner_url,
-            competingTeam: data.latest_match_details.competing_team,
-            competingTeamLogo: data.latest_match_details.competing_team_logo,
-            firstInnings: data.latest_match_details.first_innings,
-            secondInnings: data.latest_match_details.second_innings,
-            result: data.latest_match_details.result
+        setTeamBannerUrl(data.team_banner_url)
+        const latest = data.latest_match_details
+        const updatedLatestMatch = {
+            id: latest.id,
+            date: latest.date,
+            venue: latest.venue,
+            result: latest.result,
+            competingTeam: latest.competing_team,
+            competingTeamLogo: latest.competing_team_logo,
+            firstInnings: latest.first_innings,
+            secondInnings: latest.second_innings,
+            manOfTheMatch: latest.man_of_the_match,
+            umpires: latest.umpires,
         }
 
-        setTeamData(updatedData)
+        const updatedRecentMatches = data.recent_matches.map(each => ({
+            id: each.id,
+            date: each.date,
+            venue: each.venue,
+            result: each.result,
+            competingTeam: each.competing_team,
+            competingTeamLogo: each.competing_team_logo,
+            firstInnings: each.first_innings,
+            secondInnings: each.second_innings,
+            manOfTheMatch: each.man_of_the_match,
+            umpires: each.umpires,
+            matchStatus: each.match_status,
+        }))
+        setLatestMatch(updatedLatestMatch)
+        setRecentMatches(updatedRecentMatches)
         setIsLoading(false)
     }
 
-    const renderTeamDetails = () => {
-        const { teamBannerUrl, competingTeam, competingTeamLogo, firstInnings, secondInnings, result } = teamData
-
-        return (
-            <div className="team-details">
-                <img src={teamBannerUrl} alt="team banner" className="team-banner" />
-                <h3 className='last-matches-heading'>Last Matches</h3>
-                <div className='last-matches-container'>
-                    <div className='competing-team-details'>
-                        <h2>{competingTeam}</h2>
-                        <img className='competing-team-logo' src={competingTeamLogo} alt="competing-team-logo" />
-                    </div>
-                    <h4>Result: {result}</h4>
-                    <h4>First Innings: {firstInnings}</h4>
-                    <h4>Second Innnigs: {secondInnings}</h4>
-                </div>
-            </div>
-        )
-    }
-
-
     return (
-        <div className="team-details-container">
-            {isLoading ? <Loader loading={isLoading} /> : renderTeamDetails()}
+        <div className="team-list-container">
+            {isLoading ? (
+                <Loader loading={isLoading} />
+            ) : (
+                <>
+                    <img src={teamBannerUrl} alt="team banner" className="team-banner" />
+                    <h2 className="latest-matches-heading">Latest Matches</h2>
+                    <div className="latest-match-card">
+                        <MatchCard matchDetails={latestMatch} isLatest />
+                    </div>
+                    <div className="recent-matches">
+                        {recentMatches.map(match => (
+                            <MatchCard key={match.id} matchDetails={match} />
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     )
 }
