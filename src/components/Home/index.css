@@ -1,57 +1,36 @@
 .home-container {
-    background-image: url("https://assets.ccbp.in/frontend/react-js/ipl-dashboard-lg-bg.png");
-    background-size: cover;
-    width: 1260px;
+    width: 1200px;
     height: 100%;
-    min-height: 100vh;
 }
 
-.heading {
-    color: white;
-    font-weight: bold;
-}
-
-.ipl-logo {
-    width: 30px;
-    height: 30px;
-}
-
-.heading-logo-container {
+.home-content-container {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.home-img {
+    width: 400px;
+    height: 480px;
+}
+
+.content-container {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    padding: 30px;
 }
 
-.teams-cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 20px;
+.description {
+    color: black;
+    font-size: 16px;
 }
 
-.team-item {
-    list-style-type: none;
-
-}
-
-@media screen and (max-width: 1024px) {
-    .home-container {
-        width: 100%;
-        background-image: url("https://assets.ccbp.in/frontend/react-js/ipl-dashboard-sm-bg.png");
-    }
-
-    .teams-cards-container {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 12px;
-    }
-
-    .heading {
-        font-size: 24px;
-    }
-
-    .ipl-logo {
-        width: 24px;
-        height: 24px;
-    }
+.shop-now-button {
+    background-color: #0967d2;
+    color: white;
+    align-self: flex-start;
 }

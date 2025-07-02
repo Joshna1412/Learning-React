@@ -1,59 +1,38 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import Loader from '../Loader'
+import React from 'react'
+import Header from '../Header'
 import './index.css'
-import TeamCard from '../TeamCard'
+import { Link } from 'react-router-dom'
 
-class Home extends Component {
-    state = { isLoading: true, teamsData: [] }
-
-    componentDidMount() {
-        this.getTeamsData()
-    }
-
-    getTeamsData = async () => {
-        const response = await fetch('https://apis.ccbp.in/ipl')
-        const data = await response.json()
-
-        const formattedData = data.teams.map(eachItem => ({
-            id: eachItem.id,
-            title: eachItem.name,
-            imageUrl: eachItem.team_image_url
-        }))
-
-        this.setState({ teamsData: formattedData, isLoading: false })
-    }
-
-    render() {
-        const { isLoading, teamsData } = this.state
-
-        return (
-            <div className="home-container">
-                <div className="heading-logo-container">
-                    <img
-                        className="ipl-logo"
-                        src="https://assets.ccbp.in/frontend/react-js/ipl-logo-img.png"
-                        alt="ipl logo"
-                    />
-                    <h1 className="heading">IPL Dashboard</h1>
+function Home() {
+    return (
+        <div className='home-container'>
+            <Header />
+            <div className="home-content-container">
+                <div className="content-container">
+                    <h1 className="heading">Clothes That Get YOU Noticed</h1>
+                    <p className="description">
+                        Fashion is part of the daily air and it does not quite help that it
+                        changes all the time. Clothes have always been a marker of the era
+                        and we are in a revolution. Your fashion makes you been seen and
+                        heard that way you are. So, celebrate the seasons new and exciting
+                        fashion in your own way.
+                    </p>
+                    <Link to="/products">
+                        <button type="button" className="shop-now-button">
+                            Shop Now
+                        </button>
+                    </Link>
                 </div>
-
-                <ul className="teams-cards-container">
-                    {isLoading ? (
-                        <Loader loading={isLoading} />
-                    ) : (
-                        teamsData.map(each => (
-                            <li key={each.id} className='team-item'>
-                                <Link to={`/team-matches/${each.id}`} className="team-link">
-                                    <TeamCard teamDetails={each} />
-                                </Link>
-                            </li>
-                        ))
-                    )}
-                </ul>
+                <div>
+                    <img
+                        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-home-img.png"
+                        alt="clothes that get you noticed"
+                        className="home-img"
+                    />
+                </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default Home

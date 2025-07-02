@@ -1,14 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
+import Header from '../Header'
 import './index.css'
 
-class NotFound extends Component {
-    render() {
-        return (
+function NotFound() {
+    return (
+        <div>
+            <Header />
             <div className="not-found-container">
-                <h1>Not Found Page</h1>
+                <img
+                    src="https://assets.ccbp.in/frontend/react-js/not-found-blog-img.png"
+                    alt="not-found"
+                    className="not-found-img"
+                />
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default NotFound
