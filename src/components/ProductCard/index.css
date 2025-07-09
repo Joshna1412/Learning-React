@@ -1,4 +1,13 @@
-.product-item-container {
+.product-item-container-non-prime {
+    list-style-type: none;
+    margin-bottom: 48px;
+    width: 270px;
+    flex-grow: 0;
+    flex-shrink: 1;
+    margin-right: 20px;
+}
+
+.product-item-container-prime {
     list-style-type: none;
     margin-bottom: 48px;
     width: 300px;

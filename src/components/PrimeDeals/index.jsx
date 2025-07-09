@@ -68,7 +68,7 @@ const PrimeDeals = () => {
                 <h1 className="primedeals-list-heading">Exclusive Prime Deals</h1>
                 <ul className="products-list">
                     {data.map(product => (
-                        <ProductCard productData={product} key={product.id} />
+                        <ProductCard primeDeal={true} productData={product} key={product.id} />
                     ))}
                 </ul>
             </div>

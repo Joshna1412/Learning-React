@@ -1,17 +1,29 @@
-import Header from '../Header'
-import './index.css'
+import Header from "../Header";
+import CartListView from "../CartListView";
+import EmptyCartView from "../EmptyCartView";
+import CartContext from "../CartContext";
+import "./index.css";
+import { use } from "react";
 
-const Cart = () => (
-    <div>
-        <Header />
-        <div className="cart-container">
-            <img
-                src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-cart-img.png"
-                alt="cart"
-                className="cart-img"
-            />
-        </div>
-    </div>
-)
+const Cart = () => {
+    const value = use(CartContext);
+    const { cartList } = value;
+    const showEmptyView = cartList.length === 0;
 
-export default Cart
+    return (
+        <>
+            <Header />
+            <div className="cart-container">
+                {showEmptyView ? (
+                    <EmptyCartView />
+                ) : (
+                    <div className="cart-content-container">
+                        <CartListView />
+                    </div>
+                )}
+            </div>
+        </>
+    );
+};
+
+export default Cart;
