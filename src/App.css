@@ -1,16 +1,7 @@
-.timeline-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.ccbp-heading {
-    color: #171f46;
-    font-weight: bold;
-    text-align: center;
-}
-
-.journey-heading {
-    color: #1e293b;
-    font-family: "Roboto";
-    text-align: center;
+.slider-container {
+    background-image: url('https://assets.ccbp.in/frontend/react-js/planets-app/planets-bg-img.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100%;
+    padding: 50px;
 }

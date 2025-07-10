@@ -1,291 +1,123 @@
-import React from 'react'
-import { Chrono } from 'react-chrono'
-import CourseCard from "./components/CourseCard"
-import ProjectCard from './components/ProjectCard'
+// import React from 'react'
+// import Slider from 'react-slick'
+// import 'slick-carousel/slick/slick.css'
+// import 'slick-carousel/slick/slick-theme.css'
 import './App.css'
+import SlideItem from './components/SlideItem'
 
-const timelineItemsList = [
+const planetsList = [
   {
-    id: 'c6aad2fb-7673-45cf-9606-a335acc0cf4b',
-    categoryId: 'COURSE',
-    title: '10 DECEMBER 2020',
-    courseTitle: 'Static Website',
-    description:
-      'Build your own personal portfolio website and a website to host conferences and events.  Publish your website and share it with your friends, family and beyond.',
-    duration: '10 days',
-    tagsList: [
-      {
-        id: 'c31b2ad8-f766-11eb-9a03-0242ac130003',
-        name: 'HTML Elements',
-      },
-      {
-        id: 'c31b2d08-f766-11eb-9a03-0242ac130003',
-        name: 'Class Attribute',
-      },
-      {
-        id: 'c31b2dee-f766-11eb-9a03-0242ac130003',
-        name: 'Text Properties',
-      },
-      {
-        id: 'c31b2eb6-f766-11eb-9a03-0242ac130003',
-        name: 'Bootstrap',
-      },
-      {
-        id: 'c31b2f6a-f766-11eb-9a03-0242ac130003',
-        name: 'Box Properties',
-      },
-      {
-        id: 'c31b347e-f766-11eb-9a03-0242ac130003',
-        name: 'Layout',
-      },
-      {
-        id: 'c31b358c-f766-11eb-9a03-0242ac130003',
-        name: 'Flexbox',
-      },
-    ],
-  },
-  {
-    id: 'a19d93d6-bdac-479e-b554-974ef9e6e66c',
-    categoryId: 'PROJECT',
-    title: '21 DECEMBER 2020',
-    projectTitle: 'Tourism Website',
-    description:
-      'A tourism website enables the user to browse through the images of popular destinations.',
-    imageUrl: 'https://assets.ccbp.in/frontend/react-js/projects-s4-img.png',
-    duration: '1 hr',
-    projectUrl: 'https://tourismapp.ccbp.tech/',
-  },
-  {
-    id: '40b82899-fdf7-4a3e-a43a-41a9917b4582',
-    categoryId: 'COURSE',
-    title: '5 JANUARY 2021',
-    courseTitle: 'Responsive Website',
-    description:
-      'Build a responsive website that appears beautifully on the screen of any size. Develop a personal portfolio website, an E-commerce product listing website and a website to host conferences and events.',
-    duration: '12 days',
-    tagsList: [
-      {
-        id: '551e2b7e-f767-11eb-9a03-0242ac130003',
-        name: 'Responsive Web Design',
-      },
-      {
-        id: '551e2de0-f767-11eb-9a03-0242ac130003',
-        name: 'Multiple Layouts',
-      },
-      {
-        id: '551e3114-f767-11eb-9a03-0242ac130003',
-        name: 'Column Wrapping',
-      },
-      {
-        id: '551e31e6-f767-11eb-9a03-0242ac130003',
-        name: 'Navbar',
-      },
-      {
-        id: '551e32a4-f767-11eb-9a03-0242ac130003',
-        name: 'Designing Layouts',
-      },
-      {
-        id: '551e334e-f767-11eb-9a03-0242ac130003',
-        name: 'Inheritance',
-      },
-      {
-        id: '551e3402-f767-11eb-9a03-0242ac130003',
-        name: 'CSS Gradients',
-      },
-    ],
-  },
-  {
-    id: 'ae2ede68-af77-427c-817c-0ce4beeb69c7',
-    categoryId: 'PROJECT',
-    title: '7 JANUARY 2021',
-    projectTitle: 'Food Munch',
-    description: 'Food Much Website is a user-centric food tech website.',
-    imageUrl: 'https://assets.ccbp.in/frontend/react-js/projects-r2-img.png',
-    duration: '2 hrs',
-    projectUrl: 'https://fm.ccbp.tech/',
-  },
-  {
-    id: '4938c3d1-81cd-4729-9d2c-dcd50796aa4d',
-    categoryId: 'COURSE',
-    title: '30 JANUARY 2021',
-    courseTitle: 'Dynamic Website',
-    description:
-      'Learn the fundamental concepts in JavaScript and apply them to build dynamic and interactive web applications like Counter, Guessing Game, Chat Web app, E-commerce web app, etc.',
-    duration: '20 days',
-    tagsList: [
-      {
-        id: 'd4743c06-f767-11eb-9a03-0242ac130003',
-        name: 'Declaring Variables',
-      },
-      {
-        id: 'd4743ecc-f767-11eb-9a03-0242ac130003',
-        name: 'Comparison Operator',
-      },
-      {
-        id: 'd4743fe4-f767-11eb-9a03-0242ac130003',
-        name: 'Functions',
-      },
-      {
-        id: 'd47440d4-f767-11eb-9a03-0242ac130003',
-        name: 'Object',
-      },
-      {
-        id: 'd474434a-f767-11eb-9a03-0242ac130003',
-        name: 'DOM Manipulations',
-      },
-      {
-        id: 'd474443a-f767-11eb-9a03-0242ac130003',
-        name: 'Loops',
-      },
-      {
-        id: 'd4744516-f767-11eb-9a03-0242ac130003',
-        name: 'Local Storage',
-      },
-    ],
-  },
-  {
-    id: 'd6c4b3a5-7b1d-4906-aca8-823f44129004',
-    categoryId: 'PROJECT',
-    title: '6 FEBRUARY 2021',
-    projectTitle: 'Todos Application',
-    description:
-      'This app helps users to track the day to day tasks. Users can create, edit, track the status of each todo item and able to persist them over page reloads.',
+    id: 'c22777fe-f72e-11eb-9a03-0242ac130003',
+    name: 'Mercury',
     imageUrl:
-      'https://assets.ccbp.in/frontend/react-js/appointments-app/appointments-img.png',
-    duration: '3 hrs',
-    projectUrl: 'https://todossapp.ccbp.tech/',
+      'https://assets.ccbp.in/frontend/react-js/planets-app/mercury-img.png',
+    description:
+      'Mercury is the smallest planet in the Solar System and the closest to the Sun. Its orbit around the Sun takes 87.97 Earth days, the shortest of all the Sun planets.',
   },
   {
-    id: '0a35abbe-22ca-40a1-81da-613f656b7702',
-    categoryId: 'PROJECT',
-    title: '15 FEBRUARY 2021',
-    projectTitle: 'Wikipedia Search Application',
-    description:
-      'Using this Wikipedia Search Application users can search and view curated results and can see detailed explanations in Wikipedia by clicking on the specific result.',
-    imageUrl: 'https://assets.ccbp.in/frontend/react-js/wiki-logo-img.png',
-    duration: '4 hrs',
-    projectUrl: 'https://wikiseaarch.ccbp.tech/',
-  },
-  {
-    id: 'd80781c3-980e-4ab9-96ca-9ad1a9cdf93d',
-    categoryId: 'COURSE',
-    title: '15 MARCH 2021',
-    courseTitle: 'RWD using Flexbox',
-    description:
-      'Learn to develop responsive layouts using CSS Flexbox and CSS Media Queries.',
-    duration: '7 days',
-    tagsList: [
-      {
-        id: '34e6b208-f768-11eb-9a03-0242ac130003',
-        name: 'Sizing Elements',
-      },
-      {
-        id: '34e6b460-f768-11eb-9a03-0242ac130003',
-        name: 'Flexbox Layout',
-      },
-      {
-        id: '34e6b76c-f768-11eb-9a03-0242ac130003',
-        name: 'Min & Max sizes',
-      },
-      {
-        id: '34e6b83e-f768-11eb-9a03-0242ac130003',
-        name: 'Media Query Syntax',
-      },
-      {
-        id: '34e6b8fc-f768-11eb-9a03-0242ac130003',
-        name: 'Logical Operators',
-      },
-      {
-        id: '34e6ba28-f768-11eb-9a03-0242ac130003',
-        name: 'CSS box-sizing property',
-      },
-      {
-        id: '34e6baf0-f768-11eb-9a03-0242ac130003',
-        name: 'Media Features',
-      },
-    ],
-  },
-  {
-    id: '7bc3f006-f0f1-4574-924b-17c480556727',
-    categoryId: 'PROJECT',
-    title: '20 MARCH 2021',
-    projectTitle: 'Move Messenger',
-    description:
-      'The landing page of Move Messenger gives you a brief intro of Move Messenger. The landing page is responsive enabling to view it across various devices.',
+    id: 'c2277a74-f72e-11eb-9a03-0242ac130003',
+    name: 'Venus',
     imageUrl:
-      'https://assets.ccbp.in/frontend/intermediate-rwd/move-messenger-img.png',
-    duration: '5 hr',
-    projectUrl: 'https://movemessengers.ccbp.tech/',
+      'https://assets.ccbp.in/frontend/react-js/planets-app/venus-img.png',
+    description:
+      'Venus is the second planet from the Sun and is Earth’s closest planetary neighbor. It’s one of the four inner, terrestrial (or rocky) planets, and it’s often called Earth’s twin because it’s similar in size and density. These are not identical twins, however – there are radical differences between the two worlds.',
   },
   {
-    id: 'e681e826-260c-4540-9ee5-f53d0e6ecba0',
-    categoryId: 'COURSE',
-    title: '30 APRIL 2021',
-    courseTitle: 'React JS - Getting Started',
+    id: 'c2277b64-f72e-11eb-9a03-0242ac130003',
+    name: 'Earth',
+    imageUrl:
+      'https://assets.ccbp.in/frontend/react-js/planets-app/earth-img.png',
     description:
-      'Learn how to build dynamic web applications with the React JS library. When you finish this course, you will be comfortable in creating a modern, clean, and maintainable application in React JS, from scratch.',
-    duration: '18 days',
-    tagsList: [
-      {
-        id: '94947ad2-f768-11eb-9a03-0242ac130003',
-        name: 'Components',
-      },
-      {
-        id: '94947d52-f768-11eb-9a03-0242ac130003',
-        name: 'Lists',
-      },
-      {
-        id: '94947e4c-f768-11eb-9a03-0242ac130003',
-        name: 'Conditional Rendering',
-      },
-      {
-        id: '94947f14-f768-11eb-9a03-0242ac130003',
-        name: 'setState()',
-      },
-      {
-        id: '94948270-f768-11eb-9a03-0242ac130003',
-        name: 'Updating Phase',
-      },
-      {
-        id: '94948342-f768-11eb-9a03-0242ac130003',
-        name: 'Routing',
-      },
-      {
-        id: '94948400-f768-11eb-9a03-0242ac130003',
-        name: 'API Calls',
-      },
-    ],
+      'Earth is the third planet from the Sun and the only astronomical object known to harbor and support life. About 29.2% of Earth’s surface is land consisting of continents and islands.',
   },
   {
-    id: 'e093c08a-a2ae-413a-814b-e7c83f5f2ac3',
-    categoryId: 'PROJECT',
-    title: '26 MAY 2021',
-    projectTitle: 'Nxt Trendz',
+    id: 'c2277c2c-f72e-11eb-9a03-0242ac130003',
+    name: 'Mars',
+    imageUrl:
+      'https://assets.ccbp.in/frontend/react-js/planets-app/mars-img.png',
     description:
-      'Nxt Trendz application is an E-commerce application like Amazon, Flipkart where users can log in and see the list of products with search, filters, sort by, etc.',
-    imageUrl: 'https://assets.ccbp.in/frontend/react-js/nxt-trendz-img.png',
-    duration: '6 hrs',
-    projectUrl: 'https://nxtz.ccbp.tech/',
+      'Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System, being larger than only Mercury.',
+  },
+  {
+    id: 'c2277cea-f72e-11eb-9a03-0242ac130003',
+    name: 'Jupiter',
+    imageUrl:
+      'https://assets.ccbp.in/frontend/react-js/planets-app/jupiter-img.png',
+    description:
+      'Jupiter has a long history of surprising scientists – all the way back to 1610 when Galileo Galilei found the first moons beyond Earth. That discovery changed the way we see the universe.',
+  },
+  {
+    id: 'c2277d9e-f72e-11eb-9a03-0242ac130003',
+    name: 'Saturn',
+    imageUrl:
+      'https://assets.ccbp.in/frontend/react-js/planets-app/saturn-img.png',
+    description:
+      'Saturn is the sixth planet from the Sun and the second-largest planet in our solar system. Adorned with a dazzling system of icy rings, Saturn is unique among the planets. It is not the only planet to have rings, but none are as spectacular or as complex as Saturn’s.',
+  },
+  {
+    id: 'c2277e52-f72e-11eb-9a03-0242ac130003',
+    name: 'Uranus',
+    imageUrl:
+      'https://assets.ccbp.in/frontend/react-js/planets-app/uranus-img.png',
+    description:
+      'Uranus is the seventh planet from the Sun and has the third-largest diameter in our solar system. It was the first planet found with the aid of a telescope, Uranus was discovered in 1781 by astronomer William Herschel, although he originally thought it was either a comet or a star.',
+  },
+  {
+    id: 'c2277f06-f72e-11eb-9a03-0242ac130003',
+    name: 'Neptune',
+    imageUrl:
+      'https://assets.ccbp.in/frontend/react-js/planets-app/neptune-img.png',
+    description:
+      'Dark, cold, and whipped by supersonic winds, ice giant Neptune is the eighth and most distant planet in our solar system.',
   },
 ]
 
-const App = () => {
 
+// const App = () => {
+//   const settings = {
+//     // dots: true,
+//     // slidesToShow: 1,
+//     // slidesToScroll: 1,
+//   }
+//   return (
+//     <div className='slick-container'>
+//       {/* <Slider {...settings}> */}
+//       {planetsList.map(each => (
+//         <div key={each.id}>
+//           <SlideItem item={each} />
+//         </div>
+//       ))}
+//       {/* </Slider> */}
+
+//     </div>
+//   )
+// }
+
+// export default App
+
+
+import Slider from 'react-slick'
+
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+
+import './index.css'
+
+const App = () => {
+  const settings = {
+    dots: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  }
   return (
-    <div className="timeline-container">
-      <h2 className='journey-heading'>MY JOURNEY OF</h2>
-      <h1 className='ccbp-heading'>CCBP 4.0</h1>
-      <Chrono
-        mode="VERTICAL_ALTERNATING"
-        theme={{ primary: 'blue', secondary: 'white' }}
-        cardHeight={360}
-      >
-        {timelineItemsList.map(item => (
-          item.categoryId === 'COURSE'
-            ? <CourseCard item={item} />
-            : <ProjectCard item={item} />
+    <div className="slider-container">
+      <Slider {...settings}>
+        {planetsList.map(each => (
+          <div key={each.id}>
+            <SlideItem item={each} />
+          </div>
         ))}
-      </Chrono>
+      </Slider>
     </div>
   )
 }
