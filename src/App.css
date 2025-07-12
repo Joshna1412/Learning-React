@@ -1,21 +1,7 @@
 .app-container {
     background-color: #000;
-    min-height: 100vh;
-}
-
-.prime-video-img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    display: block;
-}
-
-.slider-section {
-    padding: 30px;
-}
-
-.category-title {
+    height: 100%;
     color: white;
-    font-size: 24px;
-    margin: 20px;
+    display: flex;
+    flex-direction: column;
 }

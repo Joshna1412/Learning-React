@@ -1,0 +1,119 @@
+.job-details-page {
+    background-color: #000;
+    color: #fff;
+    height: 100%;
+}
+
+.job-details-card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.job-heading {
+    color: white;
+}
+
+.job-rating {
+    color: white;
+    font-size: 16px;
+}
+
+.job-top {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.job-meta {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    color: white;
+}
+
+.job-meta-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.location,
+.employment {
+    color: white;
+    font-size: 16px;
+    margin-right: 25px;
+    margin-left: 15px;
+}
+
+.description {
+    color: white;
+    font-size: 16px;
+}
+
+.horizontal-line {
+    width: 100%;
+    border: 1px;
+}
+
+.description-heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.visit-link {
+    margin-top: 5px;
+}
+
+
+.skills-list {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.skill-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 250px;
+}
+
+.skill-name {
+    color: white;
+    font-size: 16px;
+    margin: 10px;
+}
+
+.life-at-company img {
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.life-at-company-description {
+    color: white;
+    font-size: 16px;
+    margin-right: 30px;
+}
+
+.life-at-company-description-image-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.similar-jobs-section {
+    margin-left: 160px;
+    margin-top: 40px;
+}
+
+.similar-jobs-list {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
