@@ -3,9 +3,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100%;
 }
 
 .not-found-img {
     align-self: center;
     justify-self: center;
+    width: 50%;
+    height: 370px;
+}
+
+.light {
+    background-color: black;
+}
+
+.dark {
+    background-color: #dcdcdc;
 }

@@ -5,6 +5,7 @@ import Home from './components/Home'
 import About from './components/About'
 import ThemeContext from './components/ThemeContext'
 import Header from './components/Header'
+import NotFound from './components/NotFound'
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path='/about' element={<About />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </div>
