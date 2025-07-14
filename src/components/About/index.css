@@ -1,14 +1,14 @@
-.home-container {
+.about-container {
     height: 100%;
 }
 
-.home-img-section {
+.about-img-section {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.home-icon {
+.about-icon {
     align-self: center;
     width: 40%;
     height: 450px;

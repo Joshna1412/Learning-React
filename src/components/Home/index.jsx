@@ -1,57 +1,17 @@
-import { useState } from "react"
-import Footer from "../Footer"
-import Header from "../Header"
-import LeftNavbar from "../LeftNavbar"
-import RightNavbar from "../RightNavbar"
-import Content from "../Content"
-import ContentContext from "../ContentContext"
-import "./index.css"
+import ThemeContext from '../ThemeContext'
+import { useContext } from 'react'
+import './index.css'
 
 const Home = () => {
-    const [activeTabs, setActiveTabs] = useState({
-        content: true,
-        leftNavbar: true,
-        rightNavbar: true
-    });
+    const { isDark } = useContext(ThemeContext)
 
-    const handleChange = (event) => {
-        const { id, checked } = event.target;
-        console.log(event.target)
-        setActiveTabs(prev => ({
-            ...prev,
-            [id]: checked
-        }));
-    };
-
+    const theme = !isDark ? 'light' : 'dark'
     return (
-        <ContentContext.Provider value={{ activeTabs, setActiveTabs }}>
-            <div className="home-container">
-                <div className="layout-container">
-                    <h1>Layout</h1>
-                    <div className="selection-feild">
-                        <div>
-                            <input id="content" type="checkbox" checked={activeTabs.content} onChange={handleChange} />
-                            <label htmlFor="content">Content</label>
-                        </div>
-                        <div>
-                            <input id="leftNavbar" type="checkbox" checked={activeTabs.leftNavbar} onChange={handleChange} />
-                            <label htmlFor="leftNavbar">Left Navbar</label>
-                        </div>
-                        <div>
-                            <input id="rightNavbar" type="checkbox" checked={activeTabs.rightNavbar} onChange={handleChange} />
-                            <label htmlFor="rightNavbar">Right Navbar</label>
-                        </div>
-                    </div>
-                </div>
-                <Header />
-                <div className="main-section">
-                    {activeTabs.leftNavbar && <LeftNavbar />}
-                    {activeTabs.content && <Content />}
-                    {activeTabs.rightNavbar && <RightNavbar />}
-                </div>
-                <Footer />
+        <div className={`home-container ${theme}`}>
+            <div className='home-img-section'>
+                {isDark ? <img className='home-icon' src="https://assets.ccbp.in/frontend/react-js/home-light-img.png" alt="home-icon" /> : <img className='home-icon' src="https://assets.ccbp.in/frontend/react-js/home-dark-img.png" alt="home-icon" />}
             </div>
-        </ContentContext.Provider>
+        </div>
     )
 }
 

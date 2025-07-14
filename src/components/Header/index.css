@@ -1,11 +1,40 @@
-.header-container {
-    background-color: #cbd5e1;
-    color: #475569;
-    font-weight: bold;
-    font-size: 28px;
-    text-align: center;
-    width: 80%;
-    align-self: center;
-    margin: auto;
-    padding: 25px;
+.navbar {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.nav-home {
+    margin-right: 50px;
+}
+
+.nav-about {
+    margin-left: 50px;
+}
+
+.website-logo {
+    width: 70px;
+    height: 70px;
+}
+
+.home-about-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.theme-img {
+    width: 70px;
+    height: 70px;
+}
+
+.dark {
+    color: black;
+    background-color: white;
+}
+
+.light {
+    color: white;
+    background-color: #334155;
 }
