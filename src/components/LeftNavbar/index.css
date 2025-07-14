@@ -1,0 +1,15 @@
+.left-navbar-container {
+    background-color: #e2e8f0;
+    color: #64748b;
+    width: 20%;
+    padding: 10px;
+}
+
+.left-navbar-heading {
+    color: #64748b;
+    font-weight: bold;
+}
+
+li {
+    list-style-type: none;
+}

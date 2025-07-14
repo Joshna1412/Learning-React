@@ -1,7 +1,7 @@
 .app-container {
-    background-color: #000;
+    background-color: white;
     height: 100%;
-    color: white;
+    color: black;
     display: flex;
     flex-direction: column;
 }
