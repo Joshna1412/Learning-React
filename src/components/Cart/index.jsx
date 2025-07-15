@@ -2,8 +2,8 @@ import Header from "../Header";
 import CartListView from "../CartListView";
 import EmptyCartView from "../EmptyCartView";
 import CartContext from "../CartContext";
-import "./index.css";
 import { use } from "react";
+import { CartContainer } from "../styledComponents";
 
 const Cart = () => {
     const value = use(CartContext);
@@ -13,15 +13,15 @@ const Cart = () => {
     return (
         <>
             <Header />
-            <div className="cart-container">
+            <CartContainer>
                 {showEmptyView ? (
                     <EmptyCartView />
                 ) : (
-                    <div className="cart-content-container">
+                    <div>
                         <CartListView />
                     </div>
                 )}
-            </div>
+            </CartContainer>
         </>
     );
 };

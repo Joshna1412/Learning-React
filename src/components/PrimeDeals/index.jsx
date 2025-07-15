@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import Cookies from 'js-cookie'
 import BeatLoader from 'react-spinners/BeatLoader'
-
 import ProductCard from '../ProductCard'
-import './index.css'
+import { PrimeDealsList, PrimeDealsListHeading, PrimeDealsLoader, RegisterPrimeImg } from '../styledComponents'
 
 const apiStatusConstants = {
     initial: 'INITIAL',
@@ -64,13 +63,13 @@ const PrimeDeals = () => {
     const renderPrimeDealsList = () => {
         const { data } = apiResponse
         return (
-            <div className="products-list-container">
-                <h1 className="primedeals-list-heading">Exclusive Prime Deals</h1>
-                <ul className="products-list">
+            <div>
+                <PrimeDealsListHeading>Exclusive Prime Deals</PrimeDealsListHeading>
+                <PrimeDealsList>
                     {data.map(product => (
                         <ProductCard primeDeal={true} productData={product} key={product.id} />
                     ))}
-                </ul>
+                </PrimeDealsList>
             </div>
         )
     }
@@ -80,18 +79,17 @@ const PrimeDeals = () => {
         switch (status) {
             case apiStatusConstants.inProgress:
                 return (
-                    <div className="primedeals-loader-container">
+                    <PrimeDealsLoader>
                         <BeatLoader color="#0b69ff" />
-                    </div>
+                    </PrimeDealsLoader>
                 )
             case apiStatusConstants.success:
                 return renderPrimeDealsList()
             case apiStatusConstants.failure:
                 return (
-                    <img
+                    <RegisterPrimeImg
                         src="https://assets.ccbp.in/frontend/react-js/exclusive-deals-banner-img.png"
                         alt="Register Prime"
-                        className="register-prime-image"
                     />
                 )
             default:

@@ -1,37 +1,36 @@
 import React from 'react'
 import Header from '../Header'
-import './index.css'
 import { Link } from 'react-router-dom'
+import { Button, ContentContainer, Description, Heading, HomeContainer, HomeContentContainer, HomeImg } from '../styledComponents'
 
 function Home() {
     return (
-        <div className='home-container'>
+        <HomeContainer>
             <Header />
-            <div className="home-content-container">
-                <div className="content-container">
-                    <h1 className="heading">Clothes That Get YOU Noticed</h1>
-                    <p className="description">
+            <HomeContentContainer >
+                <ContentContainer>
+                    <Heading>Clothes That Get YOU Noticed</Heading>
+                    <Description>
                         Fashion is part of the daily air and it does not quite help that it
                         changes all the time. Clothes have always been a marker of the era
                         and we are in a revolution. Your fashion makes you been seen and
                         heard that way you are. So, celebrate the seasons new and exciting
                         fashion in your own way.
-                    </p>
+                    </Description>
                     <Link to="/products">
-                        <button type="button" className="shop-now-button">
+                        <Button type="button">
                             Shop Now
-                        </button>
+                        </Button>
                     </Link>
-                </div>
+                </ContentContainer>
                 <div>
-                    <img
+                    <HomeImg
                         src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-home-img.png"
                         alt="clothes that get you noticed"
-                        className="home-img"
                     />
                 </div>
-            </div>
-        </div>
+            </HomeContentContainer>
+        </HomeContainer>
     )
 }
 

@@ -1,29 +1,28 @@
-import './index.css'
-import { Link } from 'react-router-dom'
+import { NonPrimeProductItemContainer, ProductBrand, ProductCardLinkItem, ProductDetailsContainer, ProductPrice, ProductTitle, Rating, RatingContainer, Star, ThumnailImg } from '../styledComponents'
+
 
 const ProductCard = props => {
-    const { productData, primeDeal } = props
+    const { productData } = props
     const { title, brand, imageUrl, rating, price, id } = productData
 
     return (
-        <Link to={`/products/${id}`} className="link-item">
-            <li className={`product-item-container-${primeDeal ? "prime" : "non-prime"}`}>
-                <img src={imageUrl} alt="product" className="thumbnail-img" />
-                <h1 className="title">{title}</h1>
-                <p className="brand">by {brand}</p>
-                <div className="product-details">
-                    <p className="price">Rs {price}/-</p>
-                    <div className="rating-container">
-                        <p className="rating">{rating}</p>
-                        <img
+        <ProductCardLinkItem to={`/products/${id}`}>
+            <NonPrimeProductItemContainer>
+                <ThumnailImg src={imageUrl} alt="product" />
+                <ProductTitle>{title}</ProductTitle>
+                <ProductBrand>by {brand}</ProductBrand>
+                <ProductDetailsContainer>
+                    <ProductPrice>Rs {price}/-</ProductPrice>
+                    <RatingContainer>
+                        <Rating >{rating}</Rating>
+                        <Star
                             src="https://assets.ccbp.in/frontend/react-js/star-img.png"
                             alt="star"
-                            className="star"
                         />
-                    </div>
-                </div>
-            </li>
-        </Link>
+                    </RatingContainer>
+                </ProductDetailsContainer>
+            </NonPrimeProductItemContainer>
+        </ProductCardLinkItem>
     )
 }
 export default ProductCard

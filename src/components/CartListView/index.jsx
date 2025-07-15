@@ -1,7 +1,16 @@
 import { useContext, useMemo } from 'react'
 import CartContext from '../CartContext'
 import CartItem from '../CartItem'
-import './index.css'
+import {
+    CartList,
+    CartHeader,
+    RemoveAllButton,
+    OrderCountContainer,
+    HeadingTotal,
+    AmountText,
+    ItemsCountPara,
+    CheckoutButton,
+} from '../styledComponents'
 
 const CartListView = () => {
     const { cartList, deleteCartItem } = useContext(CartContext)
@@ -18,24 +27,22 @@ const CartListView = () => {
 
     return (
         <div>
-            <div className="cart-header">
+            <CartHeader>
                 <h1>My Cart</h1>
-                <button className="remove-button" onClick={onDeleteAll}>
-                    Remove All
-                </button>
-            </div>
-            <ul className="cart-list">
+                <RemoveAllButton onClick={onDeleteAll}>Remove All</RemoveAllButton>
+            </CartHeader>
+            <CartList>
                 {cartList.map(eachCartItem => (
                     <CartItem key={eachCartItem.id} cartItemDetails={eachCartItem} />
                 ))}
-            </ul>
-            <div className="order-count-container">
-                <h2 className="heading-total">
-                    Order Total: <span className="amount">Rs {totalAmount}/-</span>
-                </h2>
-                <p className="items-count-para">{cartList.length} Items in Cart</p>
-                <button className="check-out-button">CheckOut</button>
-            </div>
+            </CartList>
+            <OrderCountContainer>
+                <HeadingTotal>
+                    Order Total: <AmountText>Rs {totalAmount}/-</AmountText>
+                </HeadingTotal>
+                <ItemsCountPara>{cartList.length} Items in Cart</ItemsCountPara>
+                <CheckoutButton>CheckOut</CheckoutButton>
+            </OrderCountContainer>
         </div>
     )
 }

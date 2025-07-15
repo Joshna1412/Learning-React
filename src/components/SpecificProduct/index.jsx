@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useParams } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import BeatLoader from 'react-spinners/BeatLoader'
 import { BsPlusSquare, BsDashSquare } from 'react-icons/bs'
@@ -8,7 +8,36 @@ import Header from '../Header'
 import SimilarProductItem from '../SimliarProductItem'
 import CartContext from '../CartContext'
 
-import './index.css'
+import {
+    ProductItemDetailsContainer,
+    ProductDetailsSuccessView,
+    ProductDetailsContainer,
+    ProductImage,
+    ProductContent,
+    ProductName,
+    PriceDetails,
+    RatingAndReviews,
+    RatingContainer,
+    Rating,
+    Star,
+    ReviewsCount,
+    ProductDescription,
+    LabelValueContainer,
+    Label,
+    Value,
+    HorizontalLine,
+    QuantityContainer,
+    QuantityButton,
+    QuantityIcon,
+    Quantity,
+    ActionButton,
+    SimilarProductsHeading,
+    SimilarProductsList,
+    LoaderContainer,
+    ErrorContainer,
+    ErrorImage,
+    ErrorHeading
+} from './styledComponents'
 
 const apiStatusConstants = {
     initial: 'INITIAL',
@@ -25,8 +54,8 @@ const SpecificProduct = () => {
     })
     const [quantity, setQuantity] = useState(1)
     const { id } = useParams()
-    const value = useContext(CartContext)
-    const { addCartItem } = value
+    const { addCartItem } = useContext(CartContext)
+
     const onClickAddToCart = () => {
         const { data } = apiResponse
         const { productDetails } = data
@@ -67,56 +96,44 @@ const SpecificProduct = () => {
                 const fetchedData = await response.json()
                 const formattedProductDetails = getFormattedData(fetchedData)
                 const formattedSimilarProductsData = fetchedData.similar_products.map(
-                    eachSimilarProduct => getFormattedData(eachSimilarProduct),
+                    eachSimilarProduct => getFormattedData(eachSimilarProduct)
                 )
-                setApiResponse(prevApiResponse => ({
-                    ...prevApiResponse,
+                setApiResponse({
                     status: apiStatusConstants.success,
                     data: {
                         productDetails: formattedProductDetails,
                         similarProductsData: formattedSimilarProductsData,
                     },
-                }))
+                    errorMsg: null
+                })
             } else {
-                setApiResponse(prevApiResponse => ({
-                    ...prevApiResponse,
+                setApiResponse({
                     status: apiStatusConstants.failure,
-                }))
+                    data: null,
+                    errorMsg: 'Something went wrong'
+                })
             }
         }
         getProductData()
     }, [id])
 
-    const onDecrementQuantity = () => {
-        setQuantity(prevQuantity =>
-            prevQuantity > 1 ? prevQuantity - 1 : prevQuantity,
-        )
-    }
-
-    const onIncrementQuantity = () => {
-        setQuantity(prevQuantity => prevQuantity + 1)
-    }
-
     const renderLoadingView = () => (
-        <div className="products-details-loader-container" data-testid="loader">
+        <LoaderContainer data-testid="loader">
             <BeatLoader color="#7032a5" />
-        </div>
+        </LoaderContainer>
     )
 
     const renderFailureView = () => (
-        <div className="product-details-error-view-container">
-            <img
+        <ErrorContainer>
+            <ErrorImage
                 alt="error view"
                 src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png"
-                className="error-view-image"
             />
-            <h1 className="product-not-found-heading">Product Not Found</h1>
+            <ErrorHeading>Product Not Found</ErrorHeading>
             <Link to="/products">
-                <button type="button" className="button">
-                    Continue Shopping
-                </button>
+                <ActionButton type="button">Continue Shopping</ActionButton>
             </Link>
-        </div>
+        </ErrorContainer>
     )
 
     const renderProductDetailsView = () => {
@@ -134,77 +151,61 @@ const SpecificProduct = () => {
         } = productDetails
 
         return (
-            <div className="product-details-success-view">
-                <div className="product-details-container">
-                    <img src={imageUrl} alt="product" className="product-image" />
-                    <div className="product">
-                        <h1 className="product-name">{title}</h1>
-                        <p className="price-details">Rs {price}/-</p>
-                        <div className="rating-and-reviews-count">
-                            <div className="rating-container">
-                                <p className="rating">{rating}</p>
-                                <img
-                                    src="https://assets.ccbp.in/frontend/react-js/star-img.png"
-                                    alt="star"
-                                    className="star"
-                                />
-                            </div>
-                            <p className="reviews-count">{totalReviews} Reviews</p>
-                        </div>
-                        <p className="product-description">{description}</p>
-                        <div className="label-value-container">
-                            <p className="label">Available:</p>
-                            <p className="value">{availability}</p>
-                        </div>
-                        <div className="label-value-container">
-                            <p className="label">Brand:</p>
-                            <p className="value">{brand}</p>
-                        </div>
-                        <hr className="horizontal-line" />
-                        <div className="quantity-container">
-                            <button
+            <ProductDetailsSuccessView>
+                <ProductDetailsContainer>
+                    <ProductImage src={imageUrl} alt="product" />
+                    <ProductContent>
+                        <ProductName>{title}</ProductName>
+                        <PriceDetails>Rs {price}/-</PriceDetails>
+                        <RatingAndReviews>
+                            <RatingContainer>
+                                <Rating>{rating}</Rating>
+                                <Star src="https://assets.ccbp.in/frontend/react-js/star-img.png" alt="star" />
+                            </RatingContainer>
+                            <ReviewsCount>{totalReviews} Reviews</ReviewsCount>
+                        </RatingAndReviews>
+                        <ProductDescription>{description}</ProductDescription>
+                        <LabelValueContainer>
+                            <Label>Available:</Label>
+                            <Value>{availability}</Value>
+                        </LabelValueContainer>
+                        <LabelValueContainer>
+                            <Label>Brand:</Label>
+                            <Value>{brand}</Value>
+                        </LabelValueContainer>
+                        <HorizontalLine />
+                        <QuantityContainer>
+                            <QuantityButton
                                 type="button"
-                                className="quantity-controller-button"
-                                onClick={onDecrementQuantity}
+                                onClick={() => setQuantity(prev => (prev > 1 ? prev - 1 : prev))}
                                 data-testid="minus"
                             >
-                                <BsDashSquare
-                                    className="quantity-controller-icon"
-                                    aria-label="minus"
-                                />
-                            </button>
-                            <p className="quantity">{quantity}</p>
-                            <button
+                                <BsDashSquare className="quantity-controller-icon" />
+                            </QuantityButton>
+                            <Quantity>{quantity}</Quantity>
+                            <QuantityButton
                                 type="button"
-                                className="quantity-controller-button"
-                                onClick={onIncrementQuantity}
+                                onClick={() => setQuantity(prev => prev + 1)}
                                 data-testid="plus"
                             >
-                                <BsPlusSquare
-                                    className="quantity-controller-icon"
-                                    aria-label="plus"
-                                />
-                            </button>
-                        </div>
-                        <button
-                            type="button"
-                            className="button add-to-cart-btn"
-                            onClick={onClickAddToCart}
-                        >
+                                <BsPlusSquare className="quantity-controller-icon" />
+                            </QuantityButton>
+                        </QuantityContainer>
+                        <ActionButton type="button" onClick={onClickAddToCart}>
                             ADD TO CART
-                        </button>
-                    </div>
-                </div>
-                <h1 className="similar-products-heading">Similar Products</h1>
-                <ul className="similar-products-list">
+                        </ActionButton>
+                    </ProductContent>
+                </ProductDetailsContainer>
+                <SimilarProductsHeading>Similar Products</SimilarProductsHeading>
+                <SimilarProductsList>
                     {similarProductsData.map(eachSimilarProduct => (
                         <SimilarProductItem
                             productDetails={eachSimilarProduct}
                             key={eachSimilarProduct.id}
                         />
                     ))}
-                </ul>
-            </div>
+                </SimilarProductsList>
+            </ProductDetailsSuccessView>
         )
     }
 
@@ -225,9 +226,9 @@ const SpecificProduct = () => {
     return (
         <>
             <Header />
-            <div className="product-item-details-container">
+            <ProductItemDetailsContainer>
                 {renderProductDetails()}
-            </div>
+            </ProductItemDetailsContainer>
         </>
     )
 }

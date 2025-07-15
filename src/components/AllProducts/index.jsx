@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import Cookies from 'js-cookie'
 import BeatLoader from 'react-spinners/BeatLoader'
-
 import ProductCard from '../ProductCard'
 import ProductsHeader from '../ProductsHeader'
-import './index.css'
 import FiltersGroup from '../FiltersGroup'
+import { AllProductsContainer, AllProductsList, NoProductsDescription, NoProductsHeading, NoProductsImg, NoProductsView, ProductFailureDescription, ProductFailureHeading, ProductFailureImg, ProductLoaderContainer, ProductsErrorViewContainer } from '../styledComponents'
 
 const categoryOptions = [
     {
@@ -134,49 +133,47 @@ const AllProductsSection = () => {
                 <ProductsHeader
                     activeOptionId={activeOptionId}
                     sortbyOptions={sortbyOptions}
-                    changeSortby={changeSortby}
+                    updateActiveOptionId={changeSortby}
                 />
-                <ul className="products-list">
+                <AllProductsList>
                     {data.map(product => (
                         <ProductCard productData={product} key={product.id} />
                     ))}
-                </ul>
+                </AllProductsList>
             </div>
         ) : (
-            <div className="no-products-view">
-                <img
+            <NoProductsView>
+                <NoProductsImg
                     src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-no-products-view.png"
-                    className="no-products-img"
                     alt="no products"
                 />
-                <h1 className="no-products-heading">No Products Found</h1>
-                <p className="no-products-description">
+                <NoProductsHeading>No Products Found</NoProductsHeading>
+                <NoProductsDescription>
                     We could not find any products. Try other filters.
-                </p>
-            </div>
+                </NoProductsDescription>
+            </NoProductsView>
         )
     }
 
     const renderLoadingView = () => (
-        <div className="products-loader-container">
+        <ProductLoaderContainer>
             <BeatLoader color="#7032a5" />
-        </div>
+        </ProductLoaderContainer>
     )
 
     const renderFailureView = () => (
-        <div className="products-error-view-container">
-            <img
+        <ProductsErrorViewContainer>
+            <ProductFailureImg
                 src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png"
                 alt="all-products-error"
-                className="products-failure-img"
             />
-            <h1 className="product-failure-heading-text">
+            <ProductFailureHeading>
                 Oops! Something Went Wrong
-            </h1>
-            <p className="products-failure-description">
+            </ProductFailureHeading>
+            <ProductFailureDescription>
                 We are having some trouble processing your request. Please try again.
-            </p>
-        </div>
+            </ProductFailureDescription>
+        </ProductsErrorViewContainer>
     )
     const renderAllProducts = () => {
         const { status } = apiResponse
@@ -217,7 +214,7 @@ const AllProductsSection = () => {
     }
 
     return (
-        <div className="all-products-section">
+        <AllProductsContainer>
             <FiltersGroup
                 searchInput={searchInput}
                 categoryOptions={categoryOptions}
@@ -231,7 +228,7 @@ const AllProductsSection = () => {
                 clearFilters={clearFilters}
             />
             {renderAllProducts()}
-        </div>
+        </AllProductsContainer>
     )
 }
 

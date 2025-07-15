@@ -1,6 +1,5 @@
 import { BsSearch } from 'react-icons/bs'
-
-import './index.css'
+import { AddUp, CategoryItem, CategoryName, ClearFilterButton, FilterCategoryHeading, FilterCategoryList, FiltersGroupContainer, RatingHeading, RatingImg, RatingItem, RatingList, SearchIcon, SearchInput, SearchInputContainer } from '../styledComponents'
 
 const FiltersGroup = (props) => {
     const renderRatingsFiltersList = () => {
@@ -8,32 +7,29 @@ const FiltersGroup = (props) => {
 
         return ratingsList.map(rating => {
             const { changeRating, activeRatingId } = props
-            const ratingClassName =
-                activeRatingId === rating.ratingId ? `and-up active-rating` : `and-up`
+            const isactiverating = activeRatingId === rating.ratingId
 
             const onClickRatingItem = () => changeRating(rating.ratingId)
 
             return (
-                <li
-                    className="rating-item"
+                <RatingItem
                     key={rating.ratingId}
                     onClick={onClickRatingItem}
                 >
-                    <img
+                    <RatingImg
                         src={rating.imageUrl}
                         alt={`rating ${rating.ratingId}`}
-                        className="rating-img"
                     />
-                    <p className={ratingClassName}>& up</p>
-                </li>
+                    <AddUp isActiveRating={isactiverating}>& up</AddUp>
+                </RatingItem>
             )
         })
     }
 
     const renderRatingsFilters = () => (
         <div>
-            <h1 className="rating-heading">Rating</h1>
-            <ul className="ratings-list">{renderRatingsFiltersList()}</ul>
+            <RatingHeading>Rating</RatingHeading>
+            <RatingList>{renderRatingsFiltersList()}</RatingList>
         </div>
     )
 
@@ -44,26 +40,22 @@ const FiltersGroup = (props) => {
             const { changeCategory, activeCategoryId } = props
             const onClickCategoryItem = () => changeCategory(category.categoryId)
             const isActive = category.categoryId === activeCategoryId
-            const categoryClassName = isActive
-                ? `category-name active-category-name`
-                : `category-name`
 
             return (
-                <li
-                    className="category-item"
+                <CategoryItem
                     key={category.categoryId}
                     onClick={onClickCategoryItem}
                 >
-                    <p className={categoryClassName}>{category.name}</p>
-                </li>
+                    <CategoryName isActive={isActive}>{category.name}</CategoryName>
+                </CategoryItem>
             )
         })
     }
 
     const renderProductCategories = () => (
         <>
-            <h1 className="category-heading">Category</h1>
-            <ul className="categories-list">{renderCategoriesList()}</ul>
+            <FilterCategoryHeading>Category</FilterCategoryHeading>
+            <FilterCategoryList>{renderCategoriesList()}</FilterCategoryList>
         </>
     )
 
@@ -82,35 +74,33 @@ const FiltersGroup = (props) => {
     const renderSearchInput = () => {
         const { searchInput } = props
         return (
-            <div className="search-input-container">
-                <input
+            <SearchInputContainer>
+                <SearchInput
                     value={searchInput}
                     type="search"
-                    className="search-input"
                     placeholder="Search"
                     onChange={onChangeSearchInput}
                     onKeyDown={onEnterSearchInput}
                 />
-                <BsSearch className="search-icon" />
-            </div>
+                <SearchIcon />
+            </SearchInputContainer>
         )
     }
 
     const { clearFilters } = props
 
     return (
-        <div className="filters-group-container">
+        <FiltersGroupContainer>
             {renderSearchInput()}
             {renderProductCategories()}
             {renderRatingsFilters()}
-            <button
+            <ClearFilterButton
                 type="button"
-                className="clear-filters-btn"
                 onClick={clearFilters}
             >
                 Clear Filters
-            </button>
-        </div>
+            </ClearFilterButton>
+        </FiltersGroupContainer>
     )
 }
 

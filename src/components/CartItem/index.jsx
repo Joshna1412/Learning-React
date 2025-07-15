@@ -2,7 +2,20 @@ import { BsPlusSquare, BsDashSquare } from 'react-icons/bs'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { useContext } from 'react'
 import CartContext from '../CartContext'
-import './index.css'
+import {
+    CartItemContainer,
+    CartProductImage,
+    CartItemDetailsContainer,
+    CartProductTitleBrandContainer,
+    CartProductTitle,
+    CartProductBrand,
+    CartQuantityContainer,
+    QuantityControllerButton,
+    CartQuantity,
+    TotalPriceDeleteContainer,
+    CartTotalPrice,
+    DeleteButton
+} from '../styledComponents'
 
 const CartItem = props => {
     const { cartItemDetails } = props
@@ -28,40 +41,38 @@ const CartItem = props => {
     }
 
     return (
-        <li className="cart-item">
-            <img className="cart-product-image" src={imageUrl} alt={title} />
-            <div className="cart-item-details-container">
-                <div className="cart-product-title-brand-container">
-                    <p className="cart-product-title">{title}</p>
-                    <p className="cart-product-brand">by {brand}</p>
-                </div>
-                <div className="cart-quantity-container">
-                    <button
+        <CartItemContainer>
+            <CartProductImage src={imageUrl} alt={title} />
+            <CartItemDetailsContainer>
+                <CartProductTitleBrandContainer>
+                    <CartProductTitle>{title}</CartProductTitle>
+                    <CartProductBrand>by {brand}</CartProductBrand>
+                </CartProductTitleBrandContainer>
+                <CartQuantityContainer>
+                    <QuantityControllerButton
                         type="button"
-                        className="quantity-controller-button"
                         onClick={onDecrement}
                         data-testid="decrement"
                     >
                         <BsDashSquare color="#52606D" size={12} />
-                    </button>
-                    <p className="cart-quantity" data-testid="item-quantity">{quantity}</p>
-                    <button
+                    </QuantityControllerButton>
+                    <CartQuantity data-testid="item-quantity">{quantity}</CartQuantity>
+                    <QuantityControllerButton
                         type="button"
-                        className="quantity-controller-button"
                         onClick={onIncrement}
                         data-testid="increment"
                     >
                         <BsPlusSquare color="#52606D" size={12} />
-                    </button>
-                </div>
-                <div className="total-price-delete-container">
-                    <p className="cart-total-price">Rs {price * quantity}/-</p>
-                </div>
-            </div>
-            <button className="delete-button" type="button" onClick={onDelete} data-testid="remove">
+                    </QuantityControllerButton>
+                </CartQuantityContainer>
+                <TotalPriceDeleteContainer>
+                    <CartTotalPrice>Rs {price * quantity}/-</CartTotalPrice>
+                </TotalPriceDeleteContainer>
+            </CartItemDetailsContainer>
+            <DeleteButton type="button" onClick={onDelete} data-testid="remove">
                 <AiFillCloseCircle color="#616E7C" size={20} />
-            </button>
-        </li>
+            </DeleteButton>
+        </CartItemContainer>
     )
 }
 

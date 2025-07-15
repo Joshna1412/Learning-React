@@ -1,17 +1,15 @@
 import AllProducts from '../AllProducts'
-
 import Header from '../Header'
 import PrimeDeals from '../PrimeDeals'
-
-import './index.css'
+import { ProductsContainer } from '../styledComponents'
 
 const Products = () => (
     <div>
         <Header />
-        <div className="product-container">
+        <ProductsContainer>
             <PrimeDeals />
             <AllProducts />
-        </div>
+        </ProductsContainer>
     </div>
 )
 

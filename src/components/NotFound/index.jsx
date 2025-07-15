@@ -1,18 +1,17 @@
 import React from 'react'
 import Header from '../Header'
-import './index.css'
+import { NotFoundImg, NotFoundImgContainer } from '../styledComponents'
 
 function NotFound() {
     return (
         <div>
             <Header />
-            <div className="not-found-container">
-                <img
+            <NotFoundImgContainer>
+                <NotFoundImg
                     src="https://assets.ccbp.in/frontend/react-js/not-found-blog-img.png"
                     alt="not-found"
-                    className="not-found-img"
                 />
-            </div>
+            </NotFoundImgContainer>
         </div>
     )
 }
