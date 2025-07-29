@@ -391,7 +391,7 @@ export const HomeVideosContainer = styled.div`
     display:flex;
     flex-direction:column;
     background-color:${(props) => props.$isdark ? "#606060" : '#f9f9f9'};
-    height:${(props) => props.$bannerShown ? '' : '100%'};
+    min-height:${(props) => props.$bannerShown ? '' : '100%'};
     width:100%;
 `;
 
