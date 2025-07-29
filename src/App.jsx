@@ -1,73 +1,111 @@
-import React, { Component } from 'react'
-import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
 import Home from './components/Home'
-import LoginForm from './components/LoginForm'
-import Products from './components/Products'
-import Cart from './components/Cart'
+import Login from './components/Login'
 import NotFound from './components/NotFound'
+import { AppSection } from './components/styled-components'
+import ThemeContext from './components/ThemeContext'
+import { useState } from 'react'
+import VideoDetails from './components/VideoDetails'
+import SavedVideos from './components/SavedVideos'
+import Trending from './components/Trending'
+import Gaming from './components/Gaming'
 import ProtectedRoute from './components/ProtectedRoute'
-import SpecificProduct from './components/SpecificProduct'
-import CartContext from './components/CartContext'
 
 const App = () => {
-  const [cartList, setCartList] = useState([])
+  const [isDark, setIsDark] = useState(false)
+  const [savedVideos, setSavedVideos] = useState([])
+  const [likedVideos, setLikedVideos] = useState([])
+  const [dislikedVideos, setDislikedVideos] = useState([])
+  const [activeItem, setActiveItem] = useState('home')
 
-  const addCartItem = product => {
-    setCartList(prevCartList => {
-      const existingItem = prevCartList.find(item => item.id === product.id)
-      if (existingItem) {
-        return prevCartList.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + product.quantity }
-            : item
-        )
+  const toggleLikeVideo = (videoId) => {
+    setLikedVideos(prev => {
+      if (prev.includes(videoId)) {
+        return prev.filter(id => id !== videoId)
+      } else {
+        setDislikedVideos(disliked => disliked.filter(id => id !== videoId))
+        return [...prev, videoId]
       }
-      return [...prevCartList, product]
     })
   }
 
-  const deleteCartItem = id => {
-    setCartList(prevCartList =>
-      prevCartList.filter(item => item.id !== id)
+  const toggleDislikeVideo = (videoId) => {
+    setDislikedVideos(prev => {
+      if (prev.includes(videoId)) {
+        return prev.filter(id => id !== videoId)
+      } else {
+        setLikedVideos(liked => liked.filter(id => id !== videoId))
+        return [...prev, videoId]
+      }
+    })
+  }
+
+  const isVideoLiked = (videoId) => likedVideos.includes(videoId)
+  const isVideoDisliked = (videoId) => dislikedVideos.includes(videoId)
+
+
+  const changeTheme = () => {
+    let rootEl = document.getElementById("root");
+
+    setIsDark(!isDark)
+    if (rootEl) {
+      rootEl.style.backgroundColor = !isDark ? 'black' : 'white';
+    }
+  }
+
+  const addSavedVideo = video => {
+    setSavedVideos(prev =>
+      prev.find(v => v.id === video.id)
+        ? prev
+        : [...prev, video]
     )
   }
+
+  const deleteSaved = video => {
+    const filteredVideos = savedVideos.filter(v => v.id != video.id)
+    setSavedVideos(filteredVideos)
+  }
+
+  const checkSavedVideo = videoId => {
+    return savedVideos.some(v => v.id === videoId)
+  }
+
   return (
-    <CartContext.Provider
-      value={{
-        cartList,
-        addCartItem,
-        deleteCartItem,
-      }}
-    >
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/login" element={<LoginForm />}></Route>
-          <Route exact path="/" element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }></Route>
-          <Route exact path="/products" element={
-            <ProtectedRoute>
-              <Products />
-            </ProtectedRoute>
-          }></Route>
-          <Route exact path="/products/:id" element={
-            <ProtectedRoute>
-              <SpecificProduct />
-            </ProtectedRoute>
-          }></Route>
-          <Route exact path="/cart" element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }></Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </CartContext.Provider>
+    <ThemeContext.Provider value={{ isDark, changeTheme, activeItem, setActiveItem, savedVideos, addSavedVideo, deleteSaved, checkSavedVideo, toggleDislikeVideo, toggleLikeVideo, isVideoDisliked, isVideoLiked, likedVideos, dislikedVideos }}>
+      <AppSection>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }></Route>
+            <Route path='/trending' element={
+              <ProtectedRoute>
+                <Trending />
+              </ProtectedRoute>
+            }></Route>
+            <Route path='/gaming' element={
+              <ProtectedRoute>
+                <Gaming />
+              </ProtectedRoute>
+            } />
+            <Route path="/videos/:id" element={
+              <ProtectedRoute>
+                <VideoDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="/saved-videos" element={
+              <ProtectedRoute>
+                <SavedVideos />
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<NotFound />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </AppSection>
+    </ThemeContext.Provider>
   )
 }
 

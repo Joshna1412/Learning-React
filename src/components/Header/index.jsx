@@ -1,47 +1,87 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router'
-import { use } from 'react'
-import Cookies from 'js-cookie'
-import CartContext from "../CartContext";
-import { HeaderItems, LinkItem, LinkItemsContainer, LogoutButton, WebsiteLogoImg, HeaderContainer, CardCount, LinkStyle } from '../styledComponents'
+import {
+    HeaderDashboardSection,
+    HeaderRightItems,
+    HeaderSection,
+    LogoutButton,
+    MoonImage,
+    SunImage,
+    UserProfile,
+    WebsiteLogo,
+    LogoutIconButton,
+    HamburgerIcon
+} from "../styled-components"
+import React, { useContext } from 'react'
+import ThemeContext from "../ThemeContext"
+import Cookies from "js-cookie"
+import { Link, useNavigate } from "react-router-dom"
+import Popup from 'reactjs-popup'
+import PopupCard from "../PopupCard"
+import { FiLogOut, FiMenu } from "react-icons/fi" // Add FiMenu icon
+import PopupHamburger from "../PopupHamburger"
 
-function Header() {
+const Header = () => {
+    const { isDark, changeTheme } = useContext(ThemeContext)
     const navigate = useNavigate()
-    const value = use(CartContext);
-    const { cartList } = value;
+
     const onLogout = () => {
         Cookies.remove('jwt_token')
         navigate('/login', { replace: true })
     }
-    const renderCartItemsCount = () => {
-        const cartListCount = cartList.length;
-        return (
-            <>
-                {cartListCount > 0 ? (
-                    <CardCount>{cartListCount}</CardCount>
-                ) : null}
-            </>
-        );
-    };
+
     return (
-        <HeaderContainer>
-            <WebsiteLogoImg src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png" alt="website-logo" />
-            <HeaderItems>
-                <LinkItemsContainer>
-                    <LinkItem>
-                        <LinkStyle to="/">Home</LinkStyle>
-                    </LinkItem>
-                    <LinkItem>
-                        <LinkStyle to="/products">Products</LinkStyle>
-                    </LinkItem>
-                    <LinkItem>
-                        <LinkStyle to="/cart">Cart {renderCartItemsCount()}</LinkStyle>
-                    </LinkItem>
-                </LinkItemsContainer>
-                <LogoutButton onClick={onLogout}>Logout</LogoutButton>
-            </HeaderItems>
-        </HeaderContainer>
+        <HeaderDashboardSection $isdark={isDark}>
+            <HeaderSection>
+                <Link to="/">
+                    <WebsiteLogo
+                        src={
+                            isDark
+                                ? "https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-dark-theme-img.png"
+                                : "https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
+                        }
+                        alt="website logo"
+                    />
+                </Link>
+
+                <HeaderRightItems>
+                    {!isDark ? <MoonImage onClick={changeTheme} /> : <SunImage onClick={changeTheme} />}
+                    <div>
+                        <UserProfile
+                            src="https://assets.ccbp.in/frontend/react-js/nxt-watch-profile-img.png"
+                            alt="userprofile"
+                        />
+                        <Popup
+                            modal
+                            overlayStyle={{ background: "rgba(0,0,0,0.5)" }}
+                            trigger={
+                                <HamburgerIcon>
+                                    <FiMenu size={28} />
+                                </HamburgerIcon>
+                            }
+                        >
+                            {close => <PopupHamburger close={close} />}
+                        </Popup>
+                    </div>
+                    <Popup modal trigger={
+                        <div style={{ all: 'unset', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                            <LogoutButton>Logout</LogoutButton>
+                            <LogoutIconButton $isdark={isDark}>
+                                <FiLogOut />
+                            </LogoutIconButton>
+                        </div>
+                    }>
+                        {close => (
+                            <PopupCard
+                                close={close}
+                                onConfirm={() => {
+                                    close()
+                                    onLogout()
+                                }}
+                            />
+                        )}
+                    </Popup>
+                </HeaderRightItems>
+            </HeaderSection>
+        </HeaderDashboardSection>
     )
 }
 

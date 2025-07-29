@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 
 const ProtectedRoute = ({ children }) => {
     const token = Cookies.get('jwt_token')
-    if (token === "undefined") {
+    if (!token) {
         return <Navigate to="/login" />
     }
     return children
