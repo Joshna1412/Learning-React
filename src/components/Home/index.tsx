@@ -3,7 +3,7 @@ import Header from '../Header'
 import { Link } from 'react-router-dom'
 import { Button, ContentContainer, Description, Heading, HomeContainer, HomeContentContainer, HomeImg } from '../styledComponents'
 
-function Home() {
+const Home: React.FC = () => {
     return (
         <HomeContainer>
             <Header />

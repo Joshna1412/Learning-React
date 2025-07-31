@@ -1,3 +1,4 @@
+import React from 'react'
 import {
     SimilarProductItemContainer,
     SimilarProductImage,
@@ -10,7 +11,24 @@ import {
     SimilarProductStar
 } from '../styledComponents'
 
-const SimilarProductItem = props => {
+interface Product {
+    availability: string
+    brand: string
+    description: string
+    id: string
+    imageUrl: string
+    price: number
+    rating: number
+    title: string
+    totalReviews: number
+}
+
+interface SimilarProductItemProps {
+    productDetails: Product,
+    key: string
+}
+
+const SimilarProductItem: React.FC<SimilarProductItemProps> = props => {
     const { productDetails } = props
     const { title, brand, imageUrl, rating, price } = productDetails
 

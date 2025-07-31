@@ -2,6 +2,18 @@ import styled from "styled-components"
 import { Link } from "react-router-dom";
 import { BsFilterRight, BsSearch } from "react-icons/bs";
 
+interface ActiveProps {
+    isActive: boolean
+}
+
+interface ActiveRatingProps {
+    isActiveRating: boolean
+}
+
+interface PrimeDealProps {
+    primeDeal: boolean
+}
+
 export const Button = styled.button`
     background-color: #0b69ff;
     color: white;
@@ -216,7 +228,7 @@ export const SelectOption = styled.option`
     font-size: 14px;
 `;
 
-export const NonPrimeProductItemContainer = styled.div`
+export const NonPrimeProductItemContainer = styled.div<PrimeDealProps>`
     list-style-type: none;
     margin-bottom: 48px;
     width: ${(props) => props.primeDeal ? '300px' : '270px'};
@@ -386,7 +398,7 @@ export const CategoryItem = styled.li`
     cursor: pointer;
 `;
 
-export const CategoryName = styled.p`
+export const CategoryName = styled.p<ActiveProps>`
     color:${(props) => props.isActive ? "#6d1d9c" : '#64748b'};
     font-family: 'Roboto';
     font-size: 16px;
@@ -417,7 +429,7 @@ export const RatingItem = styled.li`
     cursor: pointer;
 `;
 
-export const AddUp = styled.p`
+export const AddUp = styled.p<ActiveRatingProps>`
     color:${(props) => props.isActiveRating ? ' #6d1d9c;' : ' #64748b'};
     font-family: Roboto;
     font-size: 16px;
@@ -850,6 +862,7 @@ export const QuantityController = styled.button`
   border: none;
   outline: none;
   cursor: pointer;
+  color:black;
 `
 
 export const QuantityControllerIcon = styled.span`
@@ -868,6 +881,7 @@ export const Quantity = styled.p`
 
 export const AddToCartButton = styled(Button)`
   margin-bottom: 48px;
+//   color:black;
 `
 
 export const SimilarProductsHeading = styled.h1`

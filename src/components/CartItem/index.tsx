@@ -17,7 +17,20 @@ import {
     DeleteButton
 } from '../styledComponents'
 
-const CartItem = props => {
+interface CartDetails {
+    id: string,
+    title: string,
+    brand: string,
+    quantity: number,
+    price: number,
+    imageUrl: string
+}
+
+interface CartItemprops {
+    cartItemDetails: CartDetails
+}
+
+const CartItem: React.FC<CartItemprops> = props => {
     const { cartItemDetails } = props
     const { id, title, brand, quantity, price, imageUrl } = cartItemDetails
     const { addCartItem, deleteCartItem } = useContext(CartContext)

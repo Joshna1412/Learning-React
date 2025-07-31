@@ -1,9 +1,10 @@
+import React from 'react'
 import AllProducts from '../AllProducts'
 import Header from '../Header'
 import PrimeDeals from '../PrimeDeals'
 import { ProductsContainer } from '../styledComponents'
 
-const Products = () => (
+const Products: React.FC = () => (
     <div>
         <Header />
         <ProductsContainer>

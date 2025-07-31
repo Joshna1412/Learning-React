@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react'
 import { useNavigate } from 'react-router'
 import Cookies from 'js-cookie'
 import {
@@ -12,15 +12,15 @@ import {
     LoginErr,
 } from '../styledComponents'
 
-const LoginForm = () => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [usernameErr, setUsernameErr] = useState(false)
-    const [passwordErr, setPasswordErr] = useState(false)
-    const [apiError, setApiError] = useState('')
+const LoginForm: React.FC = () => {
+    const [username, setUsername] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const [usernameErr, setUsernameErr] = useState<boolean>(false)
+    const [passwordErr, setPasswordErr] = useState<boolean>(false)
+    const [apiError, setApiError] = useState<string>('')
     const navigate = useNavigate()
 
-    const submitForm = async event => {
+    const submitForm = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setUsernameErr(false)
         setPasswordErr(false)
@@ -55,9 +55,24 @@ const LoginForm = () => {
                 setApiError(data.error_msg)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setApiError('Username or Password is invalid')
         }
+    }
+
+    useEffect(() => {
+        const jwtToken = Cookies.get('jwt_token')
+        if (jwtToken !== undefined) {
+            navigate('/', { replace: true })
+        }
+    }, [navigate])
+
+    const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setUsername(e.target.value)
+    }
+
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value)
     }
 
     return (
@@ -83,7 +98,7 @@ const LoginForm = () => {
                         type="text"
                         value={username}
                         placeholder="Username"
-                        onChange={e => setUsername(e.target.value)}
+                        onChange={handleUsernameChange}
                     />
                     {usernameErr && <LoginErr>Enter Username</LoginErr>}
 
@@ -93,7 +108,7 @@ const LoginForm = () => {
                         type="password"
                         value={password}
                         placeholder="Password"
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={handlePasswordChange}
                     />
                     {passwordErr && <LoginErr>Enter Password</LoginErr>}
 

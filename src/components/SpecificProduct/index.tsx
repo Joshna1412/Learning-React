@@ -1,9 +1,8 @@
-import { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import BeatLoader from 'react-spinners/BeatLoader'
 import { BsPlusSquare, BsDashSquare } from 'react-icons/bs'
-
 import Header from '../Header'
 import SimilarProductItem from '../SimliarProductItem'
 import CartContext from '../CartContext'
@@ -13,10 +12,10 @@ import {
     ProductDetailsSuccessView,
     ProductDetailsContainer,
     ProductImage,
-    ProductContent,
+    ContentContainer,
     ProductName,
     PriceDetails,
-    RatingAndReviews,
+    RatingAndReviewsCount,
     RatingContainer,
     Rating,
     Star,
@@ -27,43 +26,83 @@ import {
     Value,
     HorizontalLine,
     QuantityContainer,
-    QuantityButton,
-    QuantityIcon,
+    QuantityController,
     Quantity,
-    ActionButton,
+    AddToCartButton,
     SimilarProductsHeading,
     SimilarProductsList,
-    LoaderContainer,
-    ErrorContainer,
-    ErrorImage,
-    ErrorHeading
-} from './styledComponents'
+    ProductsDetailsLoaderContainer,
+    ProductDetailsErrorViewContainer,
+    ErrorViewImage,
+    ProductNotFoundHeading,
+} from '../styledComponents'
+import { ApiResponse, ApiStatusConstants } from '../Interfaces-component/interfaces'
 
-const apiStatusConstants = {
+interface Product {
+    availability: string
+    brand: string
+    description: string
+    id: string
+    imageUrl: string
+    price: number
+    rating: number
+    title: string
+    totalReviews: number
+}
+
+interface ApiProduct {
+    availability: string
+    brand: string
+    description: string
+    id: string
+    image_url: string
+    price: number
+    rating: number
+    title: string
+    total_reviews: number
+}
+
+interface ProductDetailsData {
+    productDetails: Product
+    similarProductsData: Product[]
+}
+
+const apiStatusConstants: ApiStatusConstants = {
     initial: 'INITIAL',
     success: 'SUCCESS',
     failure: 'FAILURE',
     inProgress: 'IN_PROGRESS',
 }
 
-const SpecificProduct = () => {
-    const [apiResponse, setApiResponse] = useState({
+const SpecificProduct: React.FC = () => {
+    const [apiResponse, setApiResponse] = useState<ApiResponse<ProductDetailsData>>({
         status: apiStatusConstants.initial,
         data: null,
         errorMsg: null,
     })
-    const [quantity, setQuantity] = useState(1)
-    const { id } = useParams()
+    const [quantity, setQuantity] = useState<number>(1)
+    const params = useParams()
+    const id = params.id || ''
+
     const { addCartItem } = useContext(CartContext)
 
     const onClickAddToCart = () => {
-        const { data } = apiResponse
-        const { productDetails } = data
-        const productToAdd = { ...productDetails, quantity }
-        addCartItem(productToAdd)
+        if (apiResponse.data) {
+            const { productDetails } = apiResponse.data
+            const cartItem = {
+                id: productDetails.id,
+                title: productDetails.title,
+                price: productDetails.price,
+                brand: productDetails.brand,
+                imageUrl: productDetails.imageUrl,
+                quantity,
+            }
+            addCartItem(cartItem)
+        }
     }
 
-    const getFormattedData = data => ({
+
+    const getFormattedData = (data: ApiProduct) => ({
         availability: data.availability,
         brand: data.brand,
         description: data.description,
@@ -118,26 +157,29 @@ const SpecificProduct = () => {
     }, [id])
 
     const renderLoadingView = () => (
-        <LoaderContainer data-testid="loader">
+        <ProductsDetailsLoaderContainer data-testid="loader">
             <BeatLoader color="#7032a5" />
-        </LoaderContainer>
+        </ProductsDetailsLoaderContainer>
     )
 
     const renderFailureView = () => (
-        <ErrorContainer>
-            <ErrorImage
+        <ProductDetailsErrorViewContainer>
+            <ErrorViewImage
                 alt="error view"
                 src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-error-view-img.png"
             />
-            <ErrorHeading>Product Not Found</ErrorHeading>
+            <ProductNotFoundHeading>Product Not Found</ProductNotFoundHeading>
             <Link to="/products">
-                <ActionButton type="button">Continue Shopping</ActionButton>
+                <AddToCartButton type="button">Continue Shopping</AddToCartButton>
             </Link>
-        </ErrorContainer>
+        </ProductDetailsErrorViewContainer>
     )
 
     const renderProductDetailsView = () => {
         const { data } = apiResponse
+        if (!data) {
+            return null
+        }
         const { productDetails, similarProductsData } = data
         const {
             availability,
@@ -154,16 +196,16 @@ const SpecificProduct = () => {
             <ProductDetailsSuccessView>
                 <ProductDetailsContainer>
                     <ProductImage src={imageUrl} alt="product" />
-                    <ProductContent>
+                    <ContentContainer>
                         <ProductName>{title}</ProductName>
                         <PriceDetails>Rs {price}/-</PriceDetails>
-                        <RatingAndReviews>
+                        <RatingAndReviewsCount>
                             <RatingContainer>
                                 <Rating>{rating}</Rating>
                                 <Star src="https://assets.ccbp.in/frontend/react-js/star-img.png" alt="star" />
                             </RatingContainer>
                             <ReviewsCount>{totalReviews} Reviews</ReviewsCount>
-                        </RatingAndReviews>
+                        </RatingAndReviewsCount>
                         <ProductDescription>{description}</ProductDescription>
                         <LabelValueContainer>
                             <Label>Available:</Label>
@@ -175,26 +217,26 @@ const SpecificProduct = () => {
                         </LabelValueContainer>
                         <HorizontalLine />
                         <QuantityContainer>
-                            <QuantityButton
+                            <QuantityController
                                 type="button"
                                 onClick={() => setQuantity(prev => (prev > 1 ? prev - 1 : prev))}
                                 data-testid="minus"
                             >
                                 <BsDashSquare className="quantity-controller-icon" />
-                            </QuantityButton>
+                            </QuantityController>
                             <Quantity>{quantity}</Quantity>
-                            <QuantityButton
+                            <QuantityController
                                 type="button"
                                 onClick={() => setQuantity(prev => prev + 1)}
                                 data-testid="plus"
                             >
                                 <BsPlusSquare className="quantity-controller-icon" />
-                            </QuantityButton>
+                            </QuantityController>
                         </QuantityContainer>
-                        <ActionButton type="button" onClick={onClickAddToCart}>
+                        <AddToCartButton type="button" onClick={onClickAddToCart}>
                             ADD TO CART
-                        </ActionButton>
-                    </ProductContent>
+                        </AddToCartButton>
+                    </ContentContainer>
                 </ProductDetailsContainer>
                 <SimilarProductsHeading>Similar Products</SimilarProductsHeading>
                 <SimilarProductsList>

@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import CartContext from '../CartContext'
 import CartItem from '../CartItem'
 import {
@@ -12,7 +12,7 @@ import {
     CheckoutButton,
 } from '../styledComponents'
 
-const CartListView = () => {
+const CartListView: React.FC = () => {
     const { cartList, deleteCartItem } = useContext(CartContext)
 
     const onDeleteAll = () => {

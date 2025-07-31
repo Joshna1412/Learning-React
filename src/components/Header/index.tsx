@@ -6,7 +6,7 @@ import Cookies from 'js-cookie'
 import CartContext from "../CartContext";
 import { HeaderItems, LinkItem, LinkItemsContainer, LogoutButton, WebsiteLogoImg, HeaderContainer, CardCount, LinkStyle } from '../styledComponents'
 
-function Header() {
+const Header: React.FC = () => {
     const navigate = useNavigate()
     const value = use(CartContext);
     const { cartList } = value;

@@ -2,7 +2,7 @@ import React from 'react'
 import Header from '../Header'
 import { NotFoundImg, NotFoundImgContainer } from '../styledComponents'
 
-function NotFound() {
+const NotFound: React.FC = () => {
     return (
         <div>
             <Header />

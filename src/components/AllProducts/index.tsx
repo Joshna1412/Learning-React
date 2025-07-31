@@ -5,6 +5,7 @@ import ProductCard from '../ProductCard'
 import ProductsHeader from '../ProductsHeader'
 import FiltersGroup from '../FiltersGroup'
 import { AllProductsContainer, AllProductsList, NoProductsDescription, NoProductsHeading, NoProductsImg, NoProductsView, ProductFailureDescription, ProductFailureHeading, ProductFailureImg, ProductLoaderContainer, ProductsErrorViewContainer } from '../styledComponents'
+import { ApiProduct, ApiResponse, ApiStatusConstants, Product } from '../Interfaces-component/interfaces'
 
 const categoryOptions = [
     {
@@ -63,7 +64,7 @@ const ratingsList = [
     },
 ]
 
-const apiStatusConstants = {
+const apiStatusConstants: ApiStatusConstants = {
     initial: 'INITIAL',
     success: 'SUCCESS',
     failure: 'FAILURE',
@@ -71,23 +72,23 @@ const apiStatusConstants = {
 }
 
 const AllProductsSection = () => {
-    const [apiResponse, setApiResponse] = useState({
+    const [apiResponse, setApiResponse] = useState<ApiResponse<Product[]>>({
         status: apiStatusConstants.initial,
         data: null,
         errorMsg: null,
     })
-    const [activeOptionId, setActiveOptionId] = useState(
+    const [activeOptionId, setActiveOptionId] = useState<string>(
         sortbyOptions[0].optionId,
     )
-    const [activeCategoryId, setActiveCategoryId] = useState('')
-    const [searchInput, setSearchInput] = useState('')
-    const [activeRatingId, setActiveRatingId] = useState('')
+    const [activeCategoryId, setActiveCategoryId] = useState<string>('')
+    const [searchInput, setSearchInput] = useState<string>('')
+    const [activeRatingId, setActiveRatingId] = useState<string>('')
 
     useEffect(() => {
         const getProducts = async () => {
             setApiResponse({
                 status: apiStatusConstants.inProgress,
-                data: null,
+                data: [],
                 errorMsg: null,
             })
             const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${activeCategoryId}&title_search=${searchInput}&rating=${activeRatingId}`
@@ -101,7 +102,7 @@ const AllProductsSection = () => {
             const response = await fetch(apiUrl, options)
             if (response.ok === true) {
                 const fetchedData = await response.json()
-                const formattedData = fetchedData.products.map(product => ({
+                const formattedData: Product[] = fetchedData.products.map((product: ApiProduct) => ({
                     title: product.title,
                     brand: product.brand,
                     price: product.price,
@@ -126,7 +127,7 @@ const AllProductsSection = () => {
 
     const renderProductsListView = () => {
         const { data } = apiResponse
-        const shouldShowProductsList = data.length > 0
+        const shouldShowProductsList = Array.isArray(data) && data.length > 0
 
         return shouldShowProductsList ? (
             <div className="all-products-container">
@@ -136,8 +137,8 @@ const AllProductsSection = () => {
                     updateActiveOptionId={changeSortby}
                 />
                 <AllProductsList>
-                    {data.map(product => (
-                        <ProductCard productData={product} key={product.id} />
+                    {apiResponse.data?.map(product => (
+                        <ProductCard productData={product} key={product.id} primeDeal={false} />
                     ))}
                 </AllProductsList>
             </div>
@@ -194,22 +195,22 @@ const AllProductsSection = () => {
         setActiveRatingId('')
     }
 
-    const changeSortby = optionId => {
+    const changeSortby = (optionId: string) => {
         setActiveOptionId(optionId)
     }
 
-    const changeRating = ratingId => {
+    const changeRating = (ratingId: string) => {
         setActiveRatingId(ratingId)
     }
 
-    const changeCategory = categoryId => {
+    const changeCategory = (categoryId: string) => {
         setActiveCategoryId(categoryId)
     }
 
-    const changeSearchInput = input => {
+    const changeSearchInput = (input: string) => {
         setSearchInput(input)
     }
-    const enterSearchInput = input => {
+    const enterSearchInput = (input: string) => {
         setSearchInput(input)
     }
 

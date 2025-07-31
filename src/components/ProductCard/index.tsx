@@ -1,13 +1,20 @@
+import React from 'react'
 import { NonPrimeProductItemContainer, ProductBrand, ProductCardLinkItem, ProductDetailsContainer, ProductPrice, ProductTitle, Rating, RatingContainer, Star, ThumnailImg } from '../styledComponents'
+import { Product } from '../Interfaces-component/interfaces';
 
 
-const ProductCard = props => {
+interface ProductCardProps {
+    productData: Product;
+    primeDeal: boolean;
+};
+
+const ProductCard: React.FC<ProductCardProps> = props => {
     const { productData } = props
     const { title, brand, imageUrl, rating, price, id } = productData
 
     return (
         <ProductCardLinkItem to={`/products/${id}`}>
-            <NonPrimeProductItemContainer>
+            <NonPrimeProductItemContainer primeDeal>
                 <ThumnailImg src={imageUrl} alt="product" />
                 <ProductTitle>{title}</ProductTitle>
                 <ProductBrand>by {brand}</ProductBrand>

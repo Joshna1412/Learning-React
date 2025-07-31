@@ -1,13 +1,36 @@
 import { BsSearch } from 'react-icons/bs'
 import { AddUp, CategoryItem, CategoryName, ClearFilterButton, FilterCategoryHeading, FilterCategoryList, FiltersGroupContainer, RatingHeading, RatingImg, RatingItem, RatingList, SearchIcon, SearchInput, SearchInputContainer } from '../styledComponents'
 
-const FiltersGroup = (props) => {
+interface Category {
+    name: string,
+    categoryId: string
+}
+
+interface Rating {
+    imageUrl: string,
+    ratingId: string
+}
+
+interface FiltersGroupProps {
+    searchInput: string,
+    categoryOptions: Category[],
+    ratingsList: Rating[],
+    changeSearchInput: (input: string) => void,
+    enterSearchInput: (input: string) => void,
+    activeCategoryId: string,
+    activeRatingId: string,
+    changeCategory: (categoryId: string) => void,
+    changeRating: (ratingId: string) => void,
+    clearFilters: () => void
+}
+
+const FiltersGroup: React.FC<FiltersGroupProps> = (props) => {
     const renderRatingsFiltersList = () => {
         const { ratingsList } = props
 
         return ratingsList.map(rating => {
             const { changeRating, activeRatingId } = props
-            const isactiverating = activeRatingId === rating.ratingId
+            const isactiverating: boolean = activeRatingId === rating.ratingId
 
             const onClickRatingItem = () => changeRating(rating.ratingId)
 
@@ -62,7 +85,7 @@ const FiltersGroup = (props) => {
     const onEnterSearchInput = event => {
         const { enterSearchInput } = props
         if (event.key === 'Enter') {
-            enterSearchInput()
+            enterSearchInput(event.target)
         }
     }
 

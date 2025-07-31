@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { EmptyCartContainer, EmptyCartImg, ShopNowButton } from '../styledComponents'
+import React from 'react'
 
-const EmptyCartView = () => {
+const EmptyCartView: React.FC = () => {
     return (
         <EmptyCartContainer>
             <EmptyCartImg

@@ -1,10 +1,22 @@
 import { BsFilterRight } from 'react-icons/bs'
 import { ProductsHeaderContainer, ProductsListHeading, SelectOption, SortByContainer, SortByPara, SortBySelect } from '../styledComponents'
+import React from 'react'
 
-const ProductsHeader = props => {
+interface SortByOption {
+    optionId: string,
+    displayText: string
+}
+
+interface ProductsHeaderProps {
+    sortbyOptions: SortByOption[],
+    activeOptionId: string,
+    updateActiveOptionId: (a: string) => void
+}
+
+const ProductsHeader: React.FC<ProductsHeaderProps> = props => {
     const { sortbyOptions, activeOptionId, updateActiveOptionId } = props
 
-    const onChangeSortby = event => {
+    const onChangeSortby = (event: React.ChangeEvent<HTMLSelectElement>) => {
         updateActiveOptionId(event.target.value)
     }
 
