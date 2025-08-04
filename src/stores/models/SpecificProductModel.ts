@@ -29,22 +29,18 @@ export class SpecificProductModel {
         makeAutoObservable(this)
     }
 
-    @action
     setQuantity(q: number) {
         this.quantity = q > 0 ? q : 1
     }
 
-    @action
     incrementQuantity() {
         this.quantity += 1
     }
 
-    @action
     decrementQuantity() {
         if (this.quantity > 1) this.quantity -= 1
     }
 
-    @action
     async fetchProduct(id: string) {
         this.status = 'IN_PROGRESS'
         const jwtToken = Cookies.get('jwt_token')

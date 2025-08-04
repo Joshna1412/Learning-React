@@ -18,7 +18,6 @@ export class PrimeDealsModel {
         makeAutoObservable(this)
     }
 
-    @action
     fetchPrimeDeals = async () => {
         this.status = 'IN_PROGRESS'
         this.errorMsg = null
