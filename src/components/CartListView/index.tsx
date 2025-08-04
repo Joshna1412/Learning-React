@@ -1,5 +1,6 @@
-import React, { useContext, useMemo } from 'react'
-import CartContext from '../CartContext'
+import React from 'react'
+import { observer } from 'mobx-react-lite'
+// import { cartStore } from "../CartContext/CartStore"
 import CartItem from '../CartItem'
 import {
     CartList,
@@ -11,19 +12,13 @@ import {
     ItemsCountPara,
     CheckoutButton,
 } from '../styledComponents'
+import { useStore } from '../../context/storeContext'
 
-const CartListView: React.FC = () => {
-    const { cartList, deleteCartItem } = useContext(CartContext)
-
+const CartListView: React.FC = observer(() => {
+    const { cartStoreModel } = useStore()
     const onDeleteAll = () => {
-        cartList.forEach(each => {
-            deleteCartItem(each.id)
-        })
+        cartStoreModel.clearCart()
     }
-
-    const totalAmount = useMemo(() => {
-        return cartList.reduce((acc, item) => acc + item.price * item.quantity, 0)
-    }, [cartList])
 
     return (
         <div>
@@ -31,20 +26,22 @@ const CartListView: React.FC = () => {
                 <h1>My Cart</h1>
                 <RemoveAllButton onClick={onDeleteAll}>Remove All</RemoveAllButton>
             </CartHeader>
+
             <CartList>
-                {cartList.map(eachCartItem => (
-                    <CartItem key={eachCartItem.id} cartItemDetails={eachCartItem} />
+                {cartStoreModel.cartList.map(item => (
+                    <CartItem key={item.id} cartItemDetails={item} />
                 ))}
             </CartList>
+
             <OrderCountContainer>
                 <HeadingTotal>
-                    Order Total: <AmountText>Rs {totalAmount}/-</AmountText>
+                    Order Total: <AmountText>Rs {cartStoreModel.totalPrice}/-</AmountText>
                 </HeadingTotal>
-                <ItemsCountPara>{cartList.length} Items in Cart</ItemsCountPara>
+                <ItemsCountPara>{cartStoreModel.totalItems} Items in Cart</ItemsCountPara>
                 <CheckoutButton>CheckOut</CheckoutButton>
             </OrderCountContainer>
         </div>
     )
-}
+})
 
 export default CartListView

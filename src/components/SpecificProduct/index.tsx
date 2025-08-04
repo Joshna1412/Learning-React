@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
 import { Link, useParams } from 'react-router-dom'
-import Cookies from 'js-cookie'
 import BeatLoader from 'react-spinners/BeatLoader'
 import { BsPlusSquare, BsDashSquare } from 'react-icons/bs'
 import Header from '../Header'
 import SimilarProductItem from '../SimliarProductItem'
-import CartContext from '../CartContext'
 
 import {
     ProductItemDetailsContainer,
@@ -36,59 +35,21 @@ import {
     ErrorViewImage,
     ProductNotFoundHeading,
 } from '../styledComponents'
-import { ApiResponse, ApiStatusConstants } from '../Interfaces-component/interfaces'
+import { useStore } from '../../context/storeContext'
 
-interface Product {
-    availability: string
-    brand: string
-    description: string
-    id: string
-    imageUrl: string
-    price: number
-    rating: number
-    title: string
-    totalReviews: number
-}
+const SpecificProduct: React.FC = observer(() => {
+    const { id = '' } = useParams()
+    const { specificProductModel, cartStoreModel } = useStore()
 
-interface ApiProduct {
-    availability: string
-    brand: string
-    description: string
-    id: string
-    image_url: string
-    price: number
-    rating: number
-    title: string
-    total_reviews: number
-}
+    const { data, status, quantity } = specificProductModel
 
-interface ProductDetailsData {
-    productDetails: Product
-    similarProductsData: Product[]
-}
-
-const apiStatusConstants: ApiStatusConstants = {
-    initial: 'INITIAL',
-    success: 'SUCCESS',
-    failure: 'FAILURE',
-    inProgress: 'IN_PROGRESS',
-}
-
-const SpecificProduct: React.FC = () => {
-    const [apiResponse, setApiResponse] = useState<ApiResponse<ProductDetailsData>>({
-        status: apiStatusConstants.initial,
-        data: null,
-        errorMsg: null,
-    })
-    const [quantity, setQuantity] = useState<number>(1)
-    const params = useParams()
-    const id = params.id || ''
-
-    const { addCartItem } = useContext(CartContext)
+    useEffect(() => {
+        specificProductModel.fetchProduct(id)
+    }, [id])
 
     const onClickAddToCart = () => {
-        if (apiResponse.data) {
-            const { productDetails } = apiResponse.data
+        if (data) {
+            const { productDetails } = data
             const cartItem = {
                 id: productDetails.id,
                 title: productDetails.title,
@@ -97,64 +58,9 @@ const SpecificProduct: React.FC = () => {
                 imageUrl: productDetails.imageUrl,
                 quantity,
             }
-            addCartItem(cartItem)
+            cartStoreModel.addCartItem(cartItem)
         }
     }
-
-
-    const getFormattedData = (data: ApiProduct) => ({
-        availability: data.availability,
-        brand: data.brand,
-        description: data.description,
-        id: data.id,
-        imageUrl: data.image_url,
-        price: data.price,
-        rating: data.rating,
-        title: data.title,
-        totalReviews: data.total_reviews,
-    })
-
-    useEffect(() => {
-        const getProductData = async () => {
-            setApiResponse({
-                status: apiStatusConstants.inProgress,
-                data: null,
-                errorMsg: null,
-            })
-            const jwtToken = Cookies.get('jwt_token')
-            const apiUrl = `https://apis.ccbp.in/products/${id}`
-            const options = {
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                },
-                method: 'GET',
-            }
-
-            const response = await fetch(apiUrl, options)
-            if (response.ok) {
-                const fetchedData = await response.json()
-                const formattedProductDetails = getFormattedData(fetchedData)
-                const formattedSimilarProductsData = fetchedData.similar_products.map(
-                    eachSimilarProduct => getFormattedData(eachSimilarProduct)
-                )
-                setApiResponse({
-                    status: apiStatusConstants.success,
-                    data: {
-                        productDetails: formattedProductDetails,
-                        similarProductsData: formattedSimilarProductsData,
-                    },
-                    errorMsg: null
-                })
-            } else {
-                setApiResponse({
-                    status: apiStatusConstants.failure,
-                    data: null,
-                    errorMsg: 'Something went wrong'
-                })
-            }
-        }
-        getProductData()
-    }, [id])
 
     const renderLoadingView = () => (
         <ProductsDetailsLoaderContainer data-testid="loader">
@@ -176,10 +82,7 @@ const SpecificProduct: React.FC = () => {
     )
 
     const renderProductDetailsView = () => {
-        const { data } = apiResponse
-        if (!data) {
-            return null
-        }
+        if (!data) return null
         const { productDetails, similarProductsData } = data
         const {
             availability,
@@ -219,7 +122,7 @@ const SpecificProduct: React.FC = () => {
                         <QuantityContainer>
                             <QuantityController
                                 type="button"
-                                onClick={() => setQuantity(prev => (prev > 1 ? prev - 1 : prev))}
+                                onClick={() => specificProductModel.decrementQuantity()}
                                 data-testid="minus"
                             >
                                 <BsDashSquare className="quantity-controller-icon" />
@@ -227,7 +130,7 @@ const SpecificProduct: React.FC = () => {
                             <Quantity>{quantity}</Quantity>
                             <QuantityController
                                 type="button"
-                                onClick={() => setQuantity(prev => prev + 1)}
+                                onClick={() => specificProductModel.incrementQuantity()}
                                 data-testid="plus"
                             >
                                 <BsPlusSquare className="quantity-controller-icon" />
@@ -240,11 +143,8 @@ const SpecificProduct: React.FC = () => {
                 </ProductDetailsContainer>
                 <SimilarProductsHeading>Similar Products</SimilarProductsHeading>
                 <SimilarProductsList>
-                    {similarProductsData.map(eachSimilarProduct => (
-                        <SimilarProductItem
-                            productDetails={eachSimilarProduct}
-                            key={eachSimilarProduct.id}
-                        />
+                    {similarProductsData.map(each => (
+                        <SimilarProductItem key={each.id} productDetails={each} />
                     ))}
                 </SimilarProductsList>
             </ProductDetailsSuccessView>
@@ -252,13 +152,12 @@ const SpecificProduct: React.FC = () => {
     }
 
     const renderProductDetails = () => {
-        const { status } = apiResponse
         switch (status) {
-            case apiStatusConstants.success:
+            case 'SUCCESS':
                 return renderProductDetailsView()
-            case apiStatusConstants.failure:
+            case 'FAILURE':
                 return renderFailureView()
-            case apiStatusConstants.inProgress:
+            case 'IN_PROGRESS':
                 return renderLoadingView()
             default:
                 return null
@@ -273,6 +172,6 @@ const SpecificProduct: React.FC = () => {
             </ProductItemDetailsContainer>
         </>
     )
-}
+})
 
 export default SpecificProduct

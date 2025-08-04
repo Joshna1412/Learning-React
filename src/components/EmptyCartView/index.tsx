@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom'
 import { EmptyCartContainer, EmptyCartImg, ShopNowButton } from '../styledComponents'
 import React from 'react'
+import { observer } from 'mobx-react-lite'
+import { useStore } from '../../context/storeContext'
+// import { cartStore } from "../CartContext/CartStore"
 
-const EmptyCartView: React.FC = () => {
+const EmptyCartView = observer(function EmptyCartView() {
+    const { cartStoreModel } = useStore()
+    if (cartStoreModel.cartList.length > 0) return null
+
     return (
         <EmptyCartContainer>
             <EmptyCartImg
@@ -15,6 +21,6 @@ const EmptyCartView: React.FC = () => {
             </Link>
         </EmptyCartContainer>
     )
-}
+})
 
 export default EmptyCartView

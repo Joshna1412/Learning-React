@@ -1,6 +1,6 @@
-import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react'
+import React, { useEffect, FormEvent, ChangeEvent } from 'react'
+import { observer } from 'mobx-react'
 import { useNavigate } from 'react-router'
-import Cookies from 'js-cookie'
 import {
     Button,
     Input,
@@ -11,68 +11,19 @@ import {
     LoginSection,
     LoginErr,
 } from '../styledComponents'
+import { useStore } from '../../context/storeContext'
 
-const LoginForm: React.FC = () => {
-    const [username, setUsername] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const [usernameErr, setUsernameErr] = useState<boolean>(false)
-    const [passwordErr, setPasswordErr] = useState<boolean>(false)
-    const [apiError, setApiError] = useState<string>('')
+const LoginForm: React.FC = observer(() => {
+    const { loginModel } = useStore()
     const navigate = useNavigate()
 
-    const submitForm = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        setUsernameErr(false)
-        setPasswordErr(false)
-        setApiError('')
-
-        let hasError = false
-        if (username.trim() === '') {
-            setUsernameErr(true)
-            hasError = true
-        }
-        if (password.trim() === '') {
-            setPasswordErr(true)
-            hasError = true
-        }
-
-        if (hasError) return
-
-        const userDetails = { username, password }
-        const url = 'https://apis.ccbp.in/login'
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(userDetails),
-            })
-            const data = await response.json()
-
-            if (response.ok) {
-                Cookies.set('jwt_token', data.jwt_token, { expires: 30 })
-                navigate('/', { replace: true })
-            } else {
-                setApiError(data.error_msg)
-            }
-        } catch (error) {
-            console.error(error)
-            setApiError('Username or Password is invalid')
-        }
-    }
-
     useEffect(() => {
-        const jwtToken = Cookies.get('jwt_token')
-        if (jwtToken !== undefined) {
-            navigate('/', { replace: true })
-        }
+        loginModel.checkAuth(navigate)
     }, [navigate])
 
-    const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value)
-    }
-
-    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value)
+    const submitForm = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        loginModel.login(navigate)
     }
 
     return (
@@ -96,29 +47,33 @@ const LoginForm: React.FC = () => {
                     <Input
                         id="username"
                         type="text"
-                        value={username}
+                        value={loginModel.username}
                         placeholder="Username"
-                        onChange={handleUsernameChange}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            loginModel.setUsername(e.target.value)
+                        }
                     />
-                    {usernameErr && <LoginErr>Enter Username</LoginErr>}
+                    {loginModel.usernameErr && <LoginErr>Enter Username</LoginErr>}
 
                     <label htmlFor="password">Password</label>
                     <Input
                         id="password"
                         type="password"
-                        value={password}
+                        value={loginModel.password}
                         placeholder="Password"
-                        onChange={handlePasswordChange}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            loginModel.setPassword(e.target.value)
+                        }
                     />
-                    {passwordErr && <LoginErr>Enter Password</LoginErr>}
+                    {loginModel.passwordErr && <LoginErr>Enter Password</LoginErr>}
 
                     <Button type="submit">Login</Button>
 
-                    {apiError && <LoginErr>{apiError}</LoginErr>}
+                    {loginModel.apiError && <LoginErr>{loginModel.apiError}</LoginErr>}
                 </LoginFormContainer>
             </LoginSubmitForm>
         </LoginSection>
     )
-}
+})
 
 export default LoginForm

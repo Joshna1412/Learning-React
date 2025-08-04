@@ -1,32 +1,40 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router'
-import { use } from 'react'
+import { observer } from 'mobx-react'
+import { Link, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
-import CartContext from "../CartContext";
-import { HeaderItems, LinkItem, LinkItemsContainer, LogoutButton, WebsiteLogoImg, HeaderContainer, CardCount, LinkStyle } from '../styledComponents'
+// import { cartStore } from '../CartContext/CartStore'
+import {
+    HeaderItems,
+    LinkItem,
+    LinkItemsContainer,
+    LogoutButton,
+    WebsiteLogoImg,
+    HeaderContainer,
+    CardCount,
+    LinkStyle,
+} from '../styledComponents'
+import { useStore } from '../../context/storeContext'
 
-const Header: React.FC = () => {
+const Header: React.FC = observer(() => {
+    const { cartStoreModel } = useStore()
     const navigate = useNavigate()
-    const value = use(CartContext);
-    const { cartList } = value;
+
     const onLogout = () => {
         Cookies.remove('jwt_token')
         navigate('/login', { replace: true })
     }
+
     const renderCartItemsCount = () => {
-        const cartListCount = cartList.length;
-        return (
-            <>
-                {cartListCount > 0 ? (
-                    <CardCount>{cartListCount}</CardCount>
-                ) : null}
-            </>
-        );
-    };
+        const count = cartStoreModel.totalItems
+        return count > 0 ? <CardCount>{count}</CardCount> : null
+    }
+
     return (
         <HeaderContainer>
-            <WebsiteLogoImg src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png" alt="website-logo" />
+            <WebsiteLogoImg
+                src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
+                alt="website-logo"
+            />
             <HeaderItems>
                 <LinkItemsContainer>
                     <LinkItem>
@@ -36,13 +44,15 @@ const Header: React.FC = () => {
                         <LinkStyle to="/products">Products</LinkStyle>
                     </LinkItem>
                     <LinkItem>
-                        <LinkStyle to="/cart">Cart {renderCartItemsCount()}</LinkStyle>
+                        <LinkStyle to="/cart">
+                            Cart {renderCartItemsCount()}
+                        </LinkStyle>
                     </LinkItem>
                 </LinkItemsContainer>
                 <LogoutButton onClick={onLogout}>Logout</LogoutButton>
             </HeaderItems>
         </HeaderContainer>
     )
-}
+})
 
 export default Header

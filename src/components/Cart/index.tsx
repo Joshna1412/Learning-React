@@ -1,14 +1,16 @@
 import Header from "../Header";
 import CartListView from "../CartListView";
 import EmptyCartView from "../EmptyCartView";
-import CartContext from "../CartContext";
 import React, { use } from "react";
 import { CartContainer } from "../styledComponents";
+import { observer } from "mobx-react";
+import { useStore } from "../../context/storeContext";
+// import { cartStore } from "../CartContext/CartStore";
 
-const Cart: React.FC = () => {
-    const value = use(CartContext);
-    const { cartList } = value;
-    const showEmptyView = cartList.length === 0;
+const Cart: React.FC = observer(() => {
+    const { cartStoreModel } = useStore()
+
+    const showEmptyView = cartStoreModel.totalItems == 0;
 
     return (
         <>
@@ -24,6 +26,6 @@ const Cart: React.FC = () => {
             </CartContainer>
         </>
     );
-};
+});
 
 export default Cart;

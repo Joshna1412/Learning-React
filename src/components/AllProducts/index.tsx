@@ -1,147 +1,55 @@
-import { useState, useEffect } from 'react'
-import Cookies from 'js-cookie'
-import BeatLoader from 'react-spinners/BeatLoader'
+import { useEffect } from 'react'
+import { observer } from 'mobx-react'
 import ProductCard from '../ProductCard'
 import ProductsHeader from '../ProductsHeader'
 import FiltersGroup from '../FiltersGroup'
-import { AllProductsContainer, AllProductsList, NoProductsDescription, NoProductsHeading, NoProductsImg, NoProductsView, ProductFailureDescription, ProductFailureHeading, ProductFailureImg, ProductLoaderContainer, ProductsErrorViewContainer } from '../styledComponents'
-import { ApiProduct, ApiResponse, ApiStatusConstants, Product } from '../Interfaces-component/interfaces'
+import {
+    AllProductsContainer,
+    AllProductsList,
+    NoProductsDescription,
+    NoProductsHeading,
+    NoProductsImg,
+    NoProductsView,
+    ProductFailureDescription,
+    ProductFailureHeading,
+    ProductFailureImg,
+    ProductLoaderContainer,
+    ProductsErrorViewContainer,
+} from '../styledComponents'
+import BeatLoader from 'react-spinners/BeatLoader'
+import { useStore } from '../../context/storeContext'
 
-const categoryOptions = [
-    {
-        name: 'Clothing',
-        categoryId: '1',
-    },
-    {
-        name: 'Electronics',
-        categoryId: '2',
-    },
-    {
-        name: 'Appliances',
-        categoryId: '3',
-    },
-    {
-        name: 'Grocery',
-        categoryId: '4',
-    },
-    {
-        name: 'Toys',
-        categoryId: '5',
-    },
-]
-
-const sortbyOptions = [
-    {
-        optionId: 'PRICE_HIGH',
-        displayText: 'Price (High-Low)',
-    },
-    {
-        optionId: 'PRICE_LOW',
-        displayText: 'Price (Low-High)',
-    },
-]
-
-const ratingsList = [
-    {
-        ratingId: '4',
-        imageUrl:
-            'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-4.png',
-    },
-    {
-        ratingId: '3',
-        imageUrl:
-            'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-3.png',
-    },
-    {
-        ratingId: '2',
-        imageUrl:
-            'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-2.png',
-    },
-    {
-        ratingId: '1',
-        imageUrl:
-            'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-1.png',
-    },
-]
-
-const apiStatusConstants: ApiStatusConstants = {
+const apiStatusConstants = {
     initial: 'INITIAL',
     success: 'SUCCESS',
     failure: 'FAILURE',
     inProgress: 'IN_PROGRESS',
 }
 
-const AllProductsSection = () => {
-    const [apiResponse, setApiResponse] = useState<ApiResponse<Product[]>>({
-        status: apiStatusConstants.initial,
-        data: null,
-        errorMsg: null,
-    })
-    const [activeOptionId, setActiveOptionId] = useState<string>(
-        sortbyOptions[0].optionId,
-    )
-    const [activeCategoryId, setActiveCategoryId] = useState<string>('')
-    const [searchInput, setSearchInput] = useState<string>('')
-    const [activeRatingId, setActiveRatingId] = useState<string>('')
-
+const AllProductsSection = observer(() => {
+    const { allProductsModel } = useStore()
     useEffect(() => {
-        const getProducts = async () => {
-            setApiResponse({
-                status: apiStatusConstants.inProgress,
-                data: [],
-                errorMsg: null,
-            })
-            const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${activeCategoryId}&title_search=${searchInput}&rating=${activeRatingId}`
-            const jwtToken = Cookies.get('jwt_token')
-            const options = {
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                },
-                method: 'GET',
-            }
-            const response = await fetch(apiUrl, options)
-            if (response.ok === true) {
-                const fetchedData = await response.json()
-                const formattedData: Product[] = fetchedData.products.map((product: ApiProduct) => ({
-                    title: product.title,
-                    brand: product.brand,
-                    price: product.price,
-                    id: product.id,
-                    imageUrl: product.image_url,
-                    rating: product.rating,
-                }))
-                setApiResponse(prevApiResponse => ({
-                    ...prevApiResponse,
-                    status: apiStatusConstants.success,
-                    data: formattedData,
-                }))
-            } else {
-                setApiResponse(prevApiResponse => ({
-                    ...prevApiResponse,
-                    status: apiStatusConstants.failure,
-                }))
-            }
-        }
-        getProducts()
-    }, [activeOptionId, activeCategoryId, searchInput, activeRatingId])
+        allProductsModel.fetchProducts()
+    }, [])
 
     const renderProductsListView = () => {
-        const { data } = apiResponse
-        const shouldShowProductsList = Array.isArray(data) && data.length > 0
-
-        return shouldShowProductsList ? (
-            <div className="all-products-container">
+        const { products } = allProductsModel
+        return products.length > 0 ? (
+            <>
                 <ProductsHeader
-                    activeOptionId={activeOptionId}
-                    sortbyOptions={sortbyOptions}
-                    updateActiveOptionId={changeSortby}
+                    activeOptionId={allProductsModel.activeOptionId}
+                    sortbyOptions={[
+                        { optionId: 'PRICE_HIGH', displayText: 'Price (High-Low)' },
+                        { optionId: 'PRICE_LOW', displayText: 'Price (Low-High)' },
+                    ]}
+                    updateActiveOptionId={allProductsModel.setSortBy.bind(allProductsModel)}
                 />
                 <AllProductsList>
-                    {apiResponse.data?.map(product => (
-                        <ProductCard productData={product} key={product.id} primeDeal={false} />
+                    {products.map(product => (
+                        <ProductCard key={product.id} productData={product} primeDeal={false} />
                     ))}
                 </AllProductsList>
-            </div>
+            </>
         ) : (
             <NoProductsView>
                 <NoProductsImg
@@ -168,17 +76,15 @@ const AllProductsSection = () => {
                 src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png"
                 alt="all-products-error"
             />
-            <ProductFailureHeading>
-                Oops! Something Went Wrong
-            </ProductFailureHeading>
+            <ProductFailureHeading>Oops! Something Went Wrong</ProductFailureHeading>
             <ProductFailureDescription>
                 We are having some trouble processing your request. Please try again.
             </ProductFailureDescription>
         </ProductsErrorViewContainer>
     )
+
     const renderAllProducts = () => {
-        const { status } = apiResponse
-        switch (status) {
+        switch (allProductsModel.status) {
             case apiStatusConstants.success:
                 return renderProductsListView()
             case apiStatusConstants.failure:
@@ -189,48 +95,35 @@ const AllProductsSection = () => {
                 return null
         }
     }
-    const clearFilters = () => {
-        setSearchInput('')
-        setActiveCategoryId('')
-        setActiveRatingId('')
-    }
-
-    const changeSortby = (optionId: string) => {
-        setActiveOptionId(optionId)
-    }
-
-    const changeRating = (ratingId: string) => {
-        setActiveRatingId(ratingId)
-    }
-
-    const changeCategory = (categoryId: string) => {
-        setActiveCategoryId(categoryId)
-    }
-
-    const changeSearchInput = (input: string) => {
-        setSearchInput(input)
-    }
-    const enterSearchInput = (input: string) => {
-        setSearchInput(input)
-    }
 
     return (
         <AllProductsContainer>
             <FiltersGroup
-                searchInput={searchInput}
-                categoryOptions={categoryOptions}
-                ratingsList={ratingsList}
-                changeSearchInput={changeSearchInput}
-                enterSearchInput={enterSearchInput}
-                activeCategoryId={activeCategoryId}
-                activeRatingId={activeRatingId}
-                changeCategory={changeCategory}
-                changeRating={changeRating}
-                clearFilters={clearFilters}
+                searchInput={allProductsModel.searchInput}
+                categoryOptions={[
+                    { name: 'Clothing', categoryId: '1' },
+                    { name: 'Electronics', categoryId: '2' },
+                    { name: 'Appliances', categoryId: '3' },
+                    { name: 'Grocery', categoryId: '4' },
+                    { name: 'Toys', categoryId: '5' },
+                ]}
+                ratingsList={[
+                    { ratingId: '4', imageUrl: 'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-4.png' },
+                    { ratingId: '3', imageUrl: 'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-3.png' },
+                    { ratingId: '2', imageUrl: 'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-2.png' },
+                    { ratingId: '1', imageUrl: 'https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat_react_js/niat_coding_questions/rating-1.png' },
+                ]}
+                changeSearchInput={allProductsModel.setSearchInput.bind(allProductsModel)}
+                enterSearchInput={allProductsModel.setSearchInput.bind(allProductsModel)}
+                activeCategoryId={allProductsModel.activeCategoryId}
+                activeRatingId={allProductsModel.activeRatingId}
+                changeCategory={allProductsModel.setCategory.bind(allProductsModel)}
+                changeRating={allProductsModel.setRating.bind(allProductsModel)}
+                clearFilters={allProductsModel.clearFilters.bind(allProductsModel)}
             />
             {renderAllProducts()}
         </AllProductsContainer>
     )
-}
+})
 
 export default AllProductsSection

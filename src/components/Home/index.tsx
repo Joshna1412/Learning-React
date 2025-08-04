@@ -3,7 +3,7 @@ import Header from '../Header'
 import { Link } from 'react-router-dom'
 import { Button, ContentContainer, Description, Heading, HomeContainer, HomeContentContainer, HomeImg } from '../styledComponents'
 
-const Home: React.FC = () => {
+function Home(): React.JSX.Element {
     return (
         <HomeContainer>
             <Header />

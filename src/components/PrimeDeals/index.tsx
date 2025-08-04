@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import Cookies from 'js-cookie'
-import BeatLoader from 'react-spinners/BeatLoader'
+// components/PrimeDeals.tsx
+import React, { useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
 import ProductCard from '../ProductCard'
 import {
     PrimeDealsList,
@@ -8,103 +8,39 @@ import {
     PrimeDealsLoader,
     RegisterPrimeImg,
 } from '../styledComponents'
-import { ApiProduct, ApiResponse, ApiStatusConstants, Product } from '../Interfaces-component/interfaces'
+import BeatLoader from 'react-spinners/BeatLoader'
+import { useStore } from '../../context/storeContext'
 
-
-
-const apiStatusConstants: ApiStatusConstants = {
-    initial: 'INITIAL',
-    success: 'SUCCESS',
-    failure: 'FAILURE',
-    inProgress: 'IN_PROGRESS',
-}
-
-const PrimeDeals: React.FC = () => {
-    const [apiResponse, setApiResponse] = useState<ApiResponse<Product[]>>({
-        status: apiStatusConstants.initial,
-        data: null,
-        errorMsg: null,
-    })
+const PrimeDeals: React.FC = observer(() => {
+    const { primeDealsModel } = useStore()
+    const { status, primeDeals, fetchPrimeDeals } = primeDealsModel
 
     useEffect(() => {
-        const getPrimeDeals = async () => {
-            setApiResponse({
-                status: apiStatusConstants.inProgress,
-                data: null,
-                errorMsg: null,
-            })
+        fetchPrimeDeals()
+    }, [fetchPrimeDeals])
 
-            const apiUrl = 'https://apis.ccbp.in/prime-deals'
-            const jwtToken = Cookies.get('jwt_token')
-            const options = {
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                },
-                method: 'GET',
-            }
+    const renderPrimeDealsList = () => (
+        <div>
+            <PrimeDealsListHeading>Exclusive Prime Deals</PrimeDealsListHeading>
+            <PrimeDealsList>
+                {primeDeals.map((product) => (
+                    <ProductCard key={product.id} primeDeal={true} productData={product} />
+                ))}
+            </PrimeDealsList>
+        </div>
+    )
 
-            try {
-                const response = await fetch(apiUrl, options)
-                if (response.ok) {
-                    const fetchedData = await response.json()
-                    const formattedData: Product[] = fetchedData.prime_deals.map((product: ApiProduct) => ({
-                        id: product.id,
-                        title: product.title,
-                        brand: product.brand,
-                        price: product.price,
-                        imageUrl: product.image_url,
-                        rating: product.rating,
-                    }))
-
-                    setApiResponse({
-                        status: apiStatusConstants.success,
-                        data: formattedData,
-                        errorMsg: null,
-                    })
-                } else {
-                    setApiResponse({
-                        status: apiStatusConstants.failure,
-                        data: null,
-                        errorMsg: 'Failed to fetch prime deals',
-                    })
-                }
-            } catch (error) {
-                setApiResponse({
-                    status: apiStatusConstants.failure,
-                    data: null,
-                    errorMsg: (error as Error).message,
-                })
-            }
-        }
-
-        getPrimeDeals()
-    }, [])
-
-    const renderPrimeDealsList = () => {
-        return (
-            <div>
-                <PrimeDealsListHeading>Exclusive Prime Deals</PrimeDealsListHeading>
-                <PrimeDealsList>
-                    {apiResponse.data?.map((product) => (
-                        <ProductCard key={product.id} primeDeal={true} productData={product} />
-                    ))}
-                </PrimeDealsList>
-            </div>
-        )
-    }
-
-    const renderPrimeDeals = () => {
-        const { status } = apiResponse
+    const renderContent = () => {
         switch (status) {
-            case apiStatusConstants.inProgress:
+            case 'IN_PROGRESS':
                 return (
                     <PrimeDealsLoader>
                         <BeatLoader color="#0b69ff" />
                     </PrimeDealsLoader>
                 )
-            case apiStatusConstants.success:
+            case 'SUCCESS':
                 return renderPrimeDealsList()
-            case apiStatusConstants.failure:
+            case 'FAILURE':
                 return (
                     <RegisterPrimeImg
                         src="https://assets.ccbp.in/frontend/react-js/exclusive-deals-banner-img.png"
@@ -116,7 +52,7 @@ const PrimeDeals: React.FC = () => {
         }
     }
 
-    return <>{renderPrimeDeals()}</>
-}
+    return <>{renderContent()}</>
+})
 
 export default PrimeDeals

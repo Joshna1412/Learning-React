@@ -1,7 +1,7 @@
+import React from 'react'
+import { observer } from 'mobx-react'
 import { BsPlusSquare, BsDashSquare } from 'react-icons/bs'
 import { AiFillCloseCircle } from 'react-icons/ai'
-import { useContext } from 'react'
-import CartContext from '../CartContext'
 import {
     CartItemContainer,
     CartProductImage,
@@ -14,43 +14,37 @@ import {
     CartQuantity,
     TotalPriceDeleteContainer,
     CartTotalPrice,
-    DeleteButton
+    DeleteButton,
 } from '../styledComponents'
+import { useStore } from '../../context/storeContext'
 
 interface CartDetails {
-    id: string,
-    title: string,
-    brand: string,
-    quantity: number,
-    price: number,
+    id: string
+    title: string
+    brand: string
+    quantity: number
+    price: number
     imageUrl: string
 }
 
-interface CartItemprops {
+interface CartItemProps {
     cartItemDetails: CartDetails
 }
 
-const CartItem: React.FC<CartItemprops> = props => {
-    const { cartItemDetails } = props
+const CartItem: React.FC<CartItemProps> = ({ cartItemDetails }) => {
+    const { cartStoreModel } = useStore()
     const { id, title, brand, quantity, price, imageUrl } = cartItemDetails
-    const { addCartItem, deleteCartItem } = useContext(CartContext)
 
     const onIncrement = () => {
-        const updatedItem = { ...cartItemDetails, quantity: 1 }
-        addCartItem(updatedItem)
+        cartStoreModel.updateQuantity(id, 1)
     }
 
     const onDecrement = () => {
-        if (quantity > 1) {
-            const updatedItem = { ...cartItemDetails, quantity: -1 }
-            addCartItem(updatedItem)
-        } else {
-            deleteCartItem(id)
-        }
+        cartStoreModel.updateQuantity(id, -1)
     }
 
     const onDelete = () => {
-        deleteCartItem(id)
+        cartStoreModel.deleteCartItem(id)
     }
 
     return (
