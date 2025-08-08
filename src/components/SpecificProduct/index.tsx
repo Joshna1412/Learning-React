@@ -59,8 +59,9 @@ const SpecificProduct: React.FC = observer(() => {
   } = specificProductModel
 
   useEffect(() => {
-    fetchProduct(id)
-  }, [id])
+    specificProductModel.fetchProduct(id);
+    }, [id]);
+
 
   const handleAddToCart = (): void => {
     if (!data) return
