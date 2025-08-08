@@ -1,5 +1,6 @@
-import { BsSearch } from 'react-icons/bs'
-import { AddUp, CategoryItem, CategoryName, ClearFilterButton, FilterCategoryHeading, FilterCategoryList, FiltersGroupContainer, RatingHeading, RatingImg, RatingItem, RatingList, SearchIcon, SearchInput, SearchInputContainer } from '../styledComponents'
+import React from 'react'
+
+import { AddUp, CategoryItem, CategoryName, ClearFilterButton, FilterCategoryHeading, FilterCategoryList, FiltersGroupContainer, RatingHeading, RatingImg, RatingItem, RatingList, SearchIcon, SearchInput, SearchInputContainer } from '../StyledComponents'
 
 interface Category {
     name: string,

@@ -1,11 +1,13 @@
+import React from "react";
+import { observer } from "mobx-react";
+
 import Header from "../Header";
 import CartListView from "../CartListView";
 import EmptyCartView from "../EmptyCartView";
-import React, { use } from "react";
-import { CartContainer } from "../styledComponents";
-import { observer } from "mobx-react";
+
+import { CartContainer } from "../StyledComponents";
+
 import { useStore } from "../../context/storeContext";
-// import { cartStore } from "../CartContext/CartStore";
 
 const Cart: React.FC = observer(() => {
     const { cartStoreModel } = useStore()

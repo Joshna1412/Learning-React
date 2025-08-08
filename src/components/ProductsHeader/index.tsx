@@ -1,6 +1,7 @@
-import { BsFilterRight } from 'react-icons/bs'
-import { ProductsHeaderContainer, ProductsListHeading, SelectOption, SortByContainer, SortByPara, SortBySelect } from '../styledComponents'
 import React from 'react'
+import { BsFilterRight } from 'react-icons/bs'
+
+import { ProductsHeaderContainer, ProductsListHeading, SelectOption, SortByContainer, SortByPara, SortBySelect } from '../StyledComponents'
 
 interface SortByOption {
     optionId: string,
@@ -10,7 +11,7 @@ interface SortByOption {
 interface ProductsHeaderProps {
     sortbyOptions: SortByOption[],
     activeOptionId: string,
-    updateActiveOptionId: (a: string) => void
+    updateActiveOptionId: (optionId: string) => void
 }
 
 const ProductsHeader: React.FC<ProductsHeaderProps> = props => {
@@ -29,6 +30,7 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = props => {
                 <SortBySelect
                     value={activeOptionId}
                     onChange={onChangeSortby}
+                    aria-label="Sort products by"
                 >
                     {sortbyOptions.map(eachOption => (
                         <SelectOption

@@ -9,7 +9,7 @@ import {
     SimilarProductRatingContainer,
     SimilarProductRating,
     SimilarProductStar
-} from '../styledComponents'
+} from '../StyledComponents'
 
 interface Product {
     availability: string

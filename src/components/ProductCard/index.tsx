@@ -1,5 +1,7 @@
 import React from 'react'
-import { NonPrimeProductItemContainer, ProductBrand, ProductCardLinkItem, ProductDetailsContainer, ProductPrice, ProductTitle, Rating, RatingContainer, Star, ThumnailImg } from '../styledComponents'
+
+import { NonPrimeProductItemContainer, ProductBrand, ProductCardLinkItem, ProductDetailsContainer, ProductPrice, ProductTitle, Rating, RatingContainer, Star, ThumnailImg } from '../StyledComponents'
+
 import { Product } from '../Interfaces-component/interfaces';
 
 
@@ -9,13 +11,13 @@ interface ProductCardProps {
 };
 
 const ProductCard: React.FC<ProductCardProps> = props => {
-    const { productData } = props
+    const { productData, primeDeal } = props
     const { title, brand, imageUrl, rating, price, id } = productData
 
     return (
-        <ProductCardLinkItem to={`/products/${id}`}>
-            <NonPrimeProductItemContainer primeDeal>
-                <ThumnailImg src={imageUrl} alt="product" />
+        <ProductCardLinkItem to={`/products/${id}`}  aria-label={`View details for ${title}`}>
+            <NonPrimeProductItemContainer primeDeal={primeDeal}>
+                <ThumnailImg src={imageUrl} alt={`product ${title}`}  />
                 <ProductTitle>{title}</ProductTitle>
                 <ProductBrand>by {brand}</ProductBrand>
                 <ProductDetailsContainer>

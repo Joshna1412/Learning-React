@@ -12,7 +12,7 @@ import {
     HeaderContainer,
     CardCount,
     LinkStyle,
-} from '../styledComponents'
+} from '../StyledComponents'
 import { useStore } from '../../context/storeContext'
 
 const Header: React.FC = observer(() => {

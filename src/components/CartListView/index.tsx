@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
-// import { cartStore } from "../CartContext/CartStore"
 import CartItem from '../CartItem'
+
 import {
     CartList,
     CartHeader,
@@ -11,7 +11,8 @@ import {
     AmountText,
     ItemsCountPara,
     CheckoutButton,
-} from '../styledComponents'
+} from '../StyledComponents'
+
 import { useStore } from '../../context/storeContext'
 
 const CartListView: React.FC = observer(() => {
