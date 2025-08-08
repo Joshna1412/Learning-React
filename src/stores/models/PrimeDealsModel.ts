@@ -1,64 +1,55 @@
-import { action, makeAutoObservable, runInAction } from 'mobx'
-import Cookies from 'js-cookie'
-import { ApiProduct, Product } from "../../components/Interfaces-component/interfaces"
-
-export const apiStatusConstants = {
-    initial: 'INITIAL',
-    success: 'SUCCESS',
-    failure: 'FAILURE',
-    inProgress: 'IN_PROGRESS',
-}
+import { action, makeAutoObservable } from "mobx";
+import ProductDetailsModel from "./ProductDetailsModel";
+import {
+  APIStatusEnum,
+  PrimeDealsResponseType,
+  ProductDetailsType,
+} from "../types";
+import { fetchAPI } from "../../utils/ApiUitls";
 
 export class PrimeDealsModel {
-    primeDeals: Product[] = []
-    status: string = apiStatusConstants.initial
-    errorMsg: string | null = null
+  primeDealsProducts: ProductDetailsModel[];
+  totalProductsCount: number;
 
-    constructor() {
-        makeAutoObservable(this)
-    }
+  primeDealsAPIStatus: APIStatusEnum;
+  primeDealsAPIError: Error | null;
 
-    fetchPrimeDeals = async () => {
-        this.status = 'IN_PROGRESS'
-        this.errorMsg = null
+  constructor() {
+    makeAutoObservable(this);
+    this.primeDealsProducts = [];
+    this.totalProductsCount = 0;
+    this.primeDealsAPIStatus = APIStatusEnum.INITIAL;
+    this.primeDealsAPIError = null;
+  }
 
-        const apiUrl = 'https://apis.ccbp.in/prime-deals'
-        const jwtToken = Cookies.get('jwt_token')
+  @action
+  setPrimeDealsAPIStatus = (status: APIStatusEnum) => {
+    this.primeDealsAPIStatus = status;
+  };
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                },
-            })
+  @action
+  setPrimeDealsAPIError = (error: Error | null) => {
+    this.primeDealsAPIError = error;
+  };
 
-            if (response.ok) {
-                const data = await response.json()
-                const formatted: Product[] = data.prime_deals.map((item: ApiProduct) => ({
-                    id: item.id,
-                    title: item.title,
-                    brand: item.brand,
-                    price: item.price,
-                    imageUrl: item.image_url,
-                    rating: item.rating,
-                }))
+  @action
+  setPrimeDealsAPIResponse = (response: PrimeDealsResponseType) => {
+    this.primeDealsProducts = response.prime_deals.map(
+      (eachProduct: ProductDetailsType) => {
+        return new ProductDetailsModel(eachProduct);
+      }
+    );
+    this.totalProductsCount = response.total;
+  };
 
-                runInAction(() => {
-                    this.primeDeals = formatted
-                    this.status = 'SUCCESS'
-                })
-            } else {
-                runInAction(() => {
-                    this.status = 'FAILURE'
-                    this.errorMsg = 'Failed to fetch prime deals'
-                })
-            }
-        } catch (error) {
-            runInAction(() => {
-                this.status = 'FAILURE'
-                this.errorMsg = (error as Error).message
-            })
-        }
-    }
+  fetchPrimeDeals = () => {
+    const apiUrl = "https://apis.ccbp.in/prime-deals";
+
+    fetchAPI(
+      apiUrl,
+      this.setPrimeDealsAPIResponse,
+      this.setPrimeDealsAPIError,
+      this.setPrimeDealsAPIStatus
+    );
+  };
 }

@@ -12,15 +12,15 @@ import {
 } from '../StyledComponents'
 
 interface Product {
-    availability: string
+    // availability: string
     brand: string
-    description: string
-    id: string
+    // description: string
+    id: number
     imageUrl: string
     price: number
     rating: number
     title: string
-    totalReviews: number
+    // totalReviews: number
 }
 
 interface SimilarProductItemProps {

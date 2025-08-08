@@ -1,95 +1,77 @@
-import { action, makeAutoObservable, runInAction } from "mobx";
-import Cookies from "js-cookie";
-import {
-  ApiProduct,
-  Product,
-} from "../../components/Interfaces-component/interfaces";
-
-export const apiStatusConstants = {
-  initial: "INITIAL",
-  success: "SUCCESS",
-  failure: "FAILURE",
-  inProgress: "IN_PROGRESS",
-};
+import { action, makeAutoObservable } from "mobx";
+import ProductDetailsModel from "./ProductDetailsModel";
+import { APIStatusEnum, ProductDetailsType } from "../types";
+import { fetchAPI } from "../../utils/ApiUitls";
 
 export class AllProductsModel {
-  products: Product[] = [];
-  status: string = apiStatusConstants.initial;
-  errorMsg: string | null = null;
+  allProducts: ProductDetailsModel[];
+  allProductsStatus: APIStatusEnum;
+  allProductsAPIError: Error | null;
 
-  activeOptionId = "PRICE_HIGH";
-  activeCategoryId = "";
-  searchInput = "";
-  activeRatingId = "";
+  activeOptionId: string = "PRICE_HIGH";
+  activeCategoryId: string = "";
+  searchInput: string = "";
+  activeRatingId: string = "";
 
   constructor() {
     makeAutoObservable(this);
+    this.allProducts = [];
+    this.allProductsStatus = APIStatusEnum.INITIAL;
+    this.allProductsAPIError = null;
   }
 
+  @action
+  setAPIStatus = (status: APIStatusEnum) => {
+    this.allProductsStatus = status;
+  };
+
+  @action
+  setAPIError = (error: Error | null) => {
+    this.allProductsAPIError = error;
+  };
+
+  @action
+  setAPIResponse = (response: { products: ProductDetailsType[] }) => {
+    this.allProducts = response.products.map(
+      (product: ProductDetailsType) => new ProductDetailsModel(product)
+    );
+  };
+
+  @action
   setSortBy(optionId: string) {
     this.activeOptionId = optionId;
-    this.fetchProducts();
+    this.fetchAllProducts();
   }
 
+  @action
   setCategory(categoryId: string) {
     this.activeCategoryId = categoryId;
-    this.fetchProducts();
+    this.fetchAllProducts();
   }
 
+  @action
   setSearchInput(input: string) {
     this.searchInput = input;
-    this.fetchProducts();
+    this.fetchAllProducts();
   }
 
+  @action
   setRating(ratingId: string) {
     this.activeRatingId = ratingId;
-    this.fetchProducts();
+    this.fetchAllProducts();
   }
 
+  @action
   clearFilters() {
     this.activeCategoryId = "";
     this.searchInput = "";
     this.activeRatingId = "";
-    this.fetchProducts();
+    this.fetchAllProducts();
   }
 
-  async fetchProducts() {
-    this.status = apiStatusConstants.inProgress;
-    const jwtToken = Cookies.get("jwt_token");
+  fetchAllProducts = () => {
     const url = `https://apis.ccbp.in/products?sort_by=${this.activeOptionId}&category=${this.activeCategoryId}&title_search=${this.searchInput}&rating=${this.activeRatingId}`;
 
-    const options = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    };
-
-    try {
-      const response = await fetch(url, options);
-      if (response.ok) {
-        const data = await response.json();
-        const formatted = data.products.map((product: ApiProduct) => ({
-          title: product.title,
-          brand: product.brand,
-          price: product.price,
-          id: product.id,
-          imageUrl: product.image_url,
-          rating: product.rating,
-        }));
-        runInAction(() => {
-          this.products = formatted;
-          this.status = apiStatusConstants.success;
-        });
-      } else {
-        runInAction(() => {
-          this.status = apiStatusConstants.failure;
-        });
-      }
-    } catch {
-      runInAction(() => {
-        this.status = apiStatusConstants.failure;
-      });
-    }
-  }
+    fetchAPI(url, this.setAPIResponse, this.setAPIError, this.setAPIStatus);
+  };
 }

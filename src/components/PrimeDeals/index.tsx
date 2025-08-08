@@ -21,7 +21,7 @@ const API_STATUS = {
 
 const PrimeDeals: React.FC = observer(() => {
   const { primeDealsModel } = useStore()
-  const { status, primeDeals, fetchPrimeDeals } = primeDealsModel
+  const {fetchPrimeDeals,primeDealsAPIStatus,primeDealsProducts} = primeDealsModel
 
   useEffect(() => {
     fetchPrimeDeals()
@@ -33,11 +33,11 @@ const PrimeDeals: React.FC = observer(() => {
     </PrimeDealsLoader>
   )
 
-  const renderPrimeDealsList = (): React.JSX.Element => (
-    <>
+  const renderPrimeDealsList = (): React.JSX.Element => {
+   return <>
       <PrimeDealsListHeading>Exclusive Prime Deals</PrimeDealsListHeading>
       <PrimeDealsList>
-        {primeDeals.map((product) => (
+        {primeDealsProducts.map((product) => (
           <ProductCard
             key={product.id}
             primeDeal={true}
@@ -46,7 +46,7 @@ const PrimeDeals: React.FC = observer(() => {
         ))}
       </PrimeDealsList>
     </>
-  )
+  }
 
   const renderFailureView = (): React.JSX.Element => (
     <RegisterPrimeImg
@@ -56,7 +56,7 @@ const PrimeDeals: React.FC = observer(() => {
   )
 
   const renderContent = (): React.JSX.Element | null => {
-    switch (status) {
+    switch (primeDealsAPIStatus) {
       case API_STATUS.IN_PROGRESS:
         return renderLoader()
       case API_STATUS.SUCCESS:

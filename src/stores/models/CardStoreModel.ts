@@ -1,7 +1,7 @@
 import { action, computed, makeAutoObservable } from "mobx";
 
 export interface CartItem {
-  id: string;
+  id: number;
   title: string;
   price: number;
   quantity: number;
@@ -28,7 +28,7 @@ export class CartStoreModel {
     }
   };
 
-  updateQuantity(id: string, delta: number) {
+  updateQuantity(id: number, delta: number) {
     const item = this.cartList.find((i) => i.id === id);
     if (item) {
       item.quantity += delta;
@@ -38,7 +38,7 @@ export class CartStoreModel {
     }
   }
 
-  deleteCartItem = (id: string) => {
+  deleteCartItem = (id: number) => {
     this.cartList = this.cartList.filter((item) => item.id !== id);
   };
 

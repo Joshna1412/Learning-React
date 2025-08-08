@@ -49,15 +49,16 @@ const RATINGS_LIST = [
 
 const AllProductsSection = observer(() => {
   const { allProductsModel } = useStore()
+  const {fetchAllProducts,allProductsStatus, allProducts} = allProductsModel
 
   useEffect(() => {
-    allProductsModel.fetchProducts()
+    allProductsModel.fetchAllProducts()
   }, [allProductsModel])
 
   const renderProductsList = (): React.JSX.Element => {
-    const { products } = allProductsModel
+    const { allProducts } = allProductsModel
 
-    if (products.length === 0) {
+    if (allProducts.length === 0) {
       return (
         <NoProductsView>
           <NoProductsImg
@@ -80,7 +81,7 @@ const AllProductsSection = observer(() => {
           updateActiveOptionId={allProductsModel.setSortBy}
         />
         <AllProductsList>
-          {products.map(product => (
+          {allProducts.map(product => (
             <ProductCard key={product.id} productData={product} primeDeal={false} />
           ))}
         </AllProductsList>
@@ -108,7 +109,7 @@ const AllProductsSection = observer(() => {
   )
 
   const renderContentByStatus = (): React.JSX.Element | null=> {
-    switch (allProductsModel.status) {
+    switch (allProductsModel.allProductsStatus) {
       case API_STATUS.SUCCESS:
         return renderProductsList()
       case API_STATUS.FAILURE:

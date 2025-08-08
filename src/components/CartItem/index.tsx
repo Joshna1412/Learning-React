@@ -22,7 +22,7 @@ import { useStore } from '../../context/storeContext'
 
 interface CartItemProps {
     cartItemDetails: {
-        id: string
+        id: number
         title: string
         brand: string
         quantity: number

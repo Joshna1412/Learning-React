@@ -48,32 +48,33 @@ const API_STATUS = {
 const SpecificProduct: React.FC = observer(() => {
   const { id = '' } = useParams()
   const { specificProductModel, cartStoreModel } = useStore()
+  // const {fetchSpecificProductAPI, specificProductStatus,specificProductData} = specificProductModel
 
   const {
-    data,
-    status,
-    quantity,
-    fetchProduct,
+    specificProductData,
+    specificProductStatus,
+    specificProductQuantity,
+    fetchSpecificProductAPI,
     incrementQuantity,
     decrementQuantity,
   } = specificProductModel
 
   useEffect(() => {
-    specificProductModel.fetchProduct(id);
+    specificProductModel.fetchSpecificProductAPI(id);
     }, [id]);
 
 
   const handleAddToCart = (): void => {
-    if (!data) return
+    if (!specificProductData) return
 
-    const { productDetails } = data
+    const { productDetails } = specificProductData
     const cartItem = {
       id: productDetails.id,
       title: productDetails.title,
       price: productDetails.price,
       brand: productDetails.brand,
       imageUrl: productDetails.imageUrl,
-      quantity,
+      quantity: specificProductQuantity,
     }
 
     cartStoreModel.addCartItem(cartItem)
@@ -99,9 +100,9 @@ const SpecificProduct: React.FC = observer(() => {
   )
 
   const renderProductDetailsView = (): React.JSX.Element | null => {
-    if (!data) return null
+    if (!specificProductData) return null
 
-    const { productDetails, similarProductsData } = data
+    const { productDetails, similarProductsData } = specificProductData
     const {
       availability,
       brand,
@@ -152,7 +153,7 @@ const SpecificProduct: React.FC = observer(() => {
                 <BsDashSquare className="quantity-controller-icon" />
               </QuantityController>
 
-              <Quantity>{quantity}</Quantity>
+              <Quantity>{specificProductQuantity}</Quantity>
 
               <QuantityController type="button" onClick={incrementQuantity} data-testid="plus">
                 <BsPlusSquare className="quantity-controller-icon" />
@@ -168,7 +169,7 @@ const SpecificProduct: React.FC = observer(() => {
         <SimilarProductsHeading>Similar Products</SimilarProductsHeading>
         <SimilarProductsList>
           {similarProductsData.map((product) => (
-            <SimilarProductItem key={product.id} productDetails={product} />
+            <SimilarProductItem key={`${product.id}-${product.title}`} productDetails={product} />
           ))}
         </SimilarProductsList>
       </ProductDetailsSuccessView>
@@ -176,7 +177,7 @@ const SpecificProduct: React.FC = observer(() => {
   }
 
   const renderProductDetails = (): React.JSX.Element | null => {
-    switch (status) {
+    switch (specificProductStatus) {
       case API_STATUS.SUCCESS:
         return renderProductDetailsView()
       case API_STATUS.FAILURE:
